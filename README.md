@@ -12,3 +12,9 @@ LONI workshop 2014 source code
 ## Programming Languages
 * C
 * Fortran
+
+## Problems
+* CalcPi
+* Matmul
+* Laplace
+* Saxpy
