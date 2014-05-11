@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include "dynamic_2d_array.h"
 
 #define MAXITER 1000000
 
@@ -19,23 +20,25 @@ int main(int argc, char* argv[])
     int nc=atoi(argv[2]);
     int niter=atoi(argv[3]);
     int iprint=atoi(argv[4]);
-    double relerr=atof(argv[5]);
+    real relerr=atof(argv[5]);
 
     int i,j,iter;
-    double dt;
+    real dt;
 
     // Get some timing information.
     clock_t time1=clock();
 
-    double **t;
-    t=malloc((nr+2)*sizeof(double *));
-    for (i=0;i<nr+2;i++)
-        t[i]=malloc((nc+2)*sizeof(double *));
+    real **t    =allocate_dynamic_2d_array(nr+2,nc+2);
+    real **told=allocate_dynamic_2d_array(nr+2,nc+2);
+    
+    //t=malloc((nr+2)*sizeof(real *));
+    //for (i=0;i<nr+2;i++)
+    //    t[i]=malloc((nc+2)*sizeof(real *));
 
-    double **told;
-    told=malloc((nr+2)*sizeof(double *));
-    for (i=0;i<nr+2;i++)
-        told[i]=malloc((nc+2)*sizeof(double *));
+    //real **told;
+    //told=malloc((nr+2)*sizeof(real *));
+    //for (i=0;i<nr+2;i++)
+    //    told[i]=malloc((nc+2)*sizeof(real *));
 
     // Initialize the array.                                                                                                                                                                           
     for (i=0; i<nr+2; i++)
@@ -87,8 +90,8 @@ int main(int argc, char* argv[])
         }
     }
 
-    free(t);
-    free(told);
+    free_dynamic_2d_array(t);
+    free_dynamic_2d_array(told);
 
     // Print out the execution time.
     clock_t time2=clock()-time1;
