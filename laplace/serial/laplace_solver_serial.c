@@ -28,47 +28,35 @@ int main(int argc, char* argv[])
     // Get some timing information.
     clock_t time1=clock();
 
-    real **t    =allocate_dynamic_2d_array(nr+2,nc+2);
-    real **told=allocate_dynamic_2d_array(nr+2,nc+2);
+    int nr2 = nr+2;
+    int nc2 = nc+2;
+
+    real **t   =allocate_dynamic_2d_array(nr2,nc2);
+    real **told=allocate_dynamic_2d_array(nr2,nc2);
     
-    //t=malloc((nr+2)*sizeof(real *));
-    //for (i=0;i<nr+2;i++)
-    //    t[i]=malloc((nc+2)*sizeof(real *));
-
-    //real **told;
-    //told=malloc((nr+2)*sizeof(real *));
-    //for (i=0;i<nr+2;i++)
-    //    told[i]=malloc((nc+2)*sizeof(real *));
-
-    // Initialize the array.                                                                                                                                                                           
-    for (i=0; i<nr+2; i++)
-        for (j=0; j<nc+2; j++)
-            told[i][j]=0.;
+    // Initialize the array.
+    memset(t[0]   , 0, nr2 * nc2 * sizeof(real));
+    memset(told[0], 0, nr2 * nc2 * sizeof(real));
 
     // Set the boundary condition.
-
     // Right boundary
-    for (i=0;i<nr+2;i++) {
+    for (i=0;i<nr2;i++) {
         t[i][nc+1]=(100.0/nr)*i;
         told[i][nc+1]=t[i][nc+1];
     }
-
     // Bottom boundary
-    for (j=0;j<nc+2;j++) {
+    for (j=0;j<nc2;j++) {
         t[nr+1][j]=(100.0/nc)*j;
         told[nr+1][j]=t[nr+1][j];
     }
 
     // Main loop.
-
     for (iter=1;iter<=niter;iter++) {
 
         for (i=1;i<=nr;i++)
             for (j=1;j<=nc;j++)
                 t[i][j]=0.25*(told[i+1][j]+told[i-1][j]+told[i][j-1]+told[i][j+1]);
-
         // Check on convergence, and move current values to old
-
         dt=0;
         for (i=1;i<=nr;i++) {
             for (j=1;j<=nc;j++) {
@@ -78,7 +66,6 @@ int main(int argc, char* argv[])
         }
 
         // Check if output is required.
-
         if (iprint != 0)
             if (iter%iprint == 0) 
                 printf("Iteration: %d; Convergence Error: %f\n",iter,dt);

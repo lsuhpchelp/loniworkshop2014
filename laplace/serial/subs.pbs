@@ -1,0 +1,11 @@
+#!/bin/bash
+#PBS -q single
+#PBS -l nodes=1:ppn=1
+#PBS -l walltime=00:10:00
+#PBS -o output_s
+#-e eg
+#PBS -j oe
+#PBS -N acc_test
+
+cd $PBS_O_WORKDIR
+./lap.sh
