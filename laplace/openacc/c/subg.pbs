@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -q gpu
+#PBS -q workq
 #PBS -l nodes=1:ppn=16
 #PBS -l walltime=00:10:00
 #PBS -o output_g
@@ -8,4 +8,4 @@
 #PBS -N acc_test
 
 cd $PBS_O_WORKDIR
-./a.out
+./lapacc.out 200 200 100 1 0.00001

@@ -17,12 +17,13 @@
 #include <math.h>
 #include <string.h>
 #include "timer.h"
+#include "dynamic_2d_array.h"
 
 #define NN 4096
 #define NM 4096
 
-double A[NN][NM];
-double Anew[NN][NM];
+//double A[NN][NM];
+//double Anew[NN][NM];
 
 int main(int argc, char** argv)
 {
@@ -32,6 +33,14 @@ int main(int argc, char** argv)
 
     const double tol = 1.0e-6;
     double error     = 1.0;
+    int nn=n;
+    int mm=m;
+
+    //real **restrict A   =allocate_dynamic_2d_array(NN,NM);
+    //real **restrict Anew   =allocate_dynamic_2d_array(NN,NM);
+
+    real **restrict A   =allocate_dynamic_2d_array(nn,mm);
+    real **restrict Anew   =allocate_dynamic_2d_array(nn,mm);
 
     memset(A, 0, n * m * sizeof(double));
     memset(Anew, 0, n * m * sizeof(double));
@@ -79,6 +88,8 @@ int main(int argc, char** argv)
         iter++;
     }
 
+    free_dynamic_2d_array(A);
+    free_dynamic_2d_array(Anew);
     double runtime = GetTimer();
 
     printf(" total: %f s\n", runtime / 1000);
