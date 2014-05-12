@@ -1,3 +1,6 @@
+#ifndef _DYNAMIC_2D_ARRAY_H_
+#define _DYNAMIC_2D_ARRAY_H_
+
 #include <stdio.h>
 #include <stdlib.h>
              
@@ -32,3 +35,5 @@ void print_matrix(real** array_dynamic, int nrows, int ncols, char* fmt_string) 
         printf("\n");
     }
 }
+
+#endif // #ifndef _DYNAMIC_2D_ARRAY_H_
