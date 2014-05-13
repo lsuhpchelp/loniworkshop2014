@@ -28,7 +28,8 @@ int main(int argc, char** argv)
 {
     const int n = NN;
     const int m = NM;
-    const int iter_max = 1000;
+    //const int iter_max = 1000;
+    const int iter_max = 500;
 
     const double tol = 1.0e-6;
     double error     = 1.0;
