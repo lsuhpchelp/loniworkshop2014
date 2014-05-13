@@ -1,3 +1,4 @@
+// http://www.drdobbs.com/parallel/creating-and-using-libraries-with-openac/240012502?pgno=2
 /* simpleMult.c for OpenACC and OpenMP */
 #include <stdio.h>
 #include <stdlib.h>
