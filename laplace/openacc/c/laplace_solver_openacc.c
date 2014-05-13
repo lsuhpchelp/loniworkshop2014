@@ -8,6 +8,7 @@
 
 int main(int argc, char* argv[])
 {
+    printf("line number %d in file %s\n", __LINE__, __FILE__);
     // Exit if the number of arguments is not 5.
     if (argc != 6) {
         printf("Usage: laplace nrows ncols niter iprint relerr\n");
@@ -31,12 +32,17 @@ int main(int argc, char* argv[])
     int nr2 = nr+2;
     int nc2 = nc+2;
 
-    real **restrict t   =allocate_dynamic_2d_array(nr2,nc2);
-    real **restrict told=allocate_dynamic_2d_array(nr2,nc2);
+    //real **restrict t   =allocate_dynamic_2d_array(nr2,nc2);
+    //real **restrict told=allocate_dynamic_2d_array(nr2,nc2);
 
+    real (*restrict t)[nc2]   =allocate_dynamic_2d_array(nr2,nc2);
+    real (*restrict told)[nc2]=allocate_dynamic_2d_array(nr2,nc2);
+    
+    printf("line number %d in file %s\n", __LINE__, __FILE__);
     // Initialize the array.
     memset(t[0]   , 0, nr2 * nc2 * sizeof(real));
     memset(told[0], 0, nr2 * nc2 * sizeof(real));
+    printf("line number %d in file %s\n", __LINE__, __FILE__);
 
     // Set the boundary condition.
     // Right boundary
@@ -50,21 +56,23 @@ int main(int argc, char* argv[])
         told[nr+1][j]=t[nr+1][j];
     }
 
+    printf("line number %d in file %s\n", __LINE__, __FILE__);
     // Main loop.
-//#pragma acc data copy(told[0][nr2*nc2]), create(t[0][nr2*nc2])
 #pragma acc data copy(told[0:nr2][0:nc2]), create(t[0:nr2][0:nc2])
     for (iter=1;iter<=niter;iter++) {
 
-//#pragma acc parallel 
-#pragma acc kernels
+    printf("iter=%d\n", iter);
+#pragma acc parallel loop
+//#pragma acc kernels
         for (i=1;i<=nr;i++)
             for (j=1;j<=nc;j++)
                 t[i][j]=0.25*(told[i+1][j]+told[i-1][j]+told[i][j-1]+told[i][j+1]);
         // Check on convergence, and move current values to old
         dt=0;
 
-//#pragma acc parallel
-#pragma acc kernels
+    printf("line number %d in file %s\n", __LINE__, __FILE__);
+#pragma acc parallel loop
+//#pragma acc kernels
         for (i=1;i<=nr;i++) {
             for (j=1;j<=nc;j++) {
                 dt=fmax(fabs(t[i][j]-told[i][j]),dt);
