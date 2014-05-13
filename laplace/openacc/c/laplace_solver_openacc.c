@@ -8,6 +8,7 @@
 
 int main(int argc, char* argv[])
 {
+    // printf("line number %d in file %s\n", __LINE__, __FILE__);
     // Exit if the number of arguments is not 5.
     if (argc != 6) {
         printf("Usage: laplace nrows ncols niter iprint relerr\n");
@@ -49,13 +50,13 @@ int main(int argc, char* argv[])
         t[nr+1][j]=(100.0/nc)*j;
         told[nr+1][j]=t[nr+1][j];
     }
+    //printf("line number %d in file %s\n", __LINE__, __FILE__);
 
     // Main loop.
 #pragma acc data copy(told[nr2][nc2]), create(t[nr2][nc2])
-    //#pragma acc data copy(A), create(Anew)
     for (iter=1;iter<=niter;iter++) {
 
-//#pragma acc parallel 
+        //#pragma acc parallel loop
 #pragma acc kernels
         for (i=1;i<=nr;i++)
             for (j=1;j<=nc;j++)
@@ -63,7 +64,7 @@ int main(int argc, char* argv[])
         // Check on convergence, and move current values to old
         dt=0;
 
-//#pragma acc parallel
+        //#pragma acc parallel loop
 #pragma acc kernels
         for (i=1;i<=nr;i++) {
             for (j=1;j<=nc;j++) {
