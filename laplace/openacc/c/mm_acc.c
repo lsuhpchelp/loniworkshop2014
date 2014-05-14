@@ -30,7 +30,25 @@ int main(int argc, char** argv) {
     real sum;
     char fmt_string[]="%5.1f ";
 
-#pragma acc data create(a[0:nra][0:nca],b[0:nca][0:ncb]) copyout(c[0:nra][0:ncb])
+    for (i = 0; i < nra; i++){
+        for (j = 0; j < nca; j++){
+            a[i][j] = (real)(i+j);
+        }
+    }
+
+    for (j = 0; j < nca; j++){
+        for (k = 0; k < ncb; k++){
+            b[j][k] = (real)(j*k);
+        }
+    }
+
+    for (i = 0; i < nra; i++){
+        for (k = 0; k < ncb; k++){
+            c[i][k] = 0.0;
+        }
+    }
+//#pragma acc data create(a[0:nra][0:nca],b[0:nca][0:ncb]) copyout(c[0:nra][0:ncb])
+#pragma acc data create(a[0:nra][0:nca],b[0:nca][0:ncb],c[0:nra][0:ncb])
     {
 
 #pragma acc parallel loop 
