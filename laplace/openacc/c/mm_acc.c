@@ -139,4 +139,5 @@ int main(int argc, char** argv) {
     free_dynamic_2d_array(b);
     free_dynamic_2d_array(c);
     free_dynamic_2d_array(cs);
+    free_dynamic_2d_array(comp);
 }
