@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <time.h>
+//#include <time.h>
+#include "timer.h"
 #include "dynamic_2d_array.h"
 
 #define MAXITER 1000000
@@ -27,7 +28,8 @@ int main(int argc, char* argv[])
     real dt;
 
     // Get some timing information.
-    clock_t time1=clock();
+    //clock_t time1=clock();
+    StartTimer();
 
     int nr2 = nr+2;
     int nc2 = nc+2;
@@ -36,8 +38,11 @@ int main(int argc, char* argv[])
     real **restrict told=allocate_dynamic_2d_array(nr2,nc2);
 
     // Initialize the array.
-    memset(t[0]   , 0, nr2 * nc2 * sizeof(real));
-    memset(told[0], 0, nr2 * nc2 * sizeof(real));
+    for (i=0;i<nr2;i++)
+        for (j=0;j<nc2;j++) {
+            t[i][j]=0.0;
+            told[i][j]=0.0;
+        }
 
     // Set the boundary condition.
     // Right boundary
@@ -56,16 +61,16 @@ int main(int argc, char* argv[])
 #pragma acc data copy(told[0:nr2][0:nc2]), create(t[0:nr2][0:nc2])
     for (iter=1;iter<=niter;iter++) {
 
-#pragma acc parallel loop
-//#pragma acc kernels
+//#pragma acc parallel loop
+#pragma acc kernels
         for (i=1;i<=nr;i++)
             for (j=1;j<=nc;j++)
                 t[i][j]=0.25*(told[i+1][j]+told[i-1][j]+told[i][j-1]+told[i][j+1]);
         // Check on convergence, and move current values to old
         dt=0;
 
-#pragma acc parallel loop
-//#pragma acc kernels
+//#pragma acc parallel loop
+#pragma acc kernels
         for (i=1;i<=nr;i++) {
             for (j=1;j<=nc;j++) {
                 dt=fmax(fabs(t[i][j]-told[i][j]),dt);
@@ -89,9 +94,11 @@ int main(int argc, char* argv[])
     free_dynamic_2d_array(told);
 
     // Print out the execution time.
-    clock_t time2=clock()-time1;
-    int msec=time2/CLOCKS_PER_SEC;
-    printf("\nTotal Time (sec): %d.\n",msec);
+    //clock_t time2=clock()-time1;
+    double runtime = GetTimer();
+    printf(" total time: %f sec\n", runtime / 1000);
+    //int msec=time2/CLOCKS_PER_SEC;
+    //printf("\nTotal Time (sec): %d.\n",msec);
 
     return 0;
 
