@@ -1,6 +1,6 @@
 CC=pgcc
 INC=-I../../serial/
-CFLAGS=-acc -Minfo=accel -ta=nvidia,time $(INC)
+CFLAGS=-acc -mp -Mconcur=allcores -Minfo=accel -ta=nvidia,time $(INC)
 CFLAGS_S=$(INC)
 LAP_ACC=laplace_openacc.c
 CUDA_CAST_ACC=laplace_openacc_cudacast.c
