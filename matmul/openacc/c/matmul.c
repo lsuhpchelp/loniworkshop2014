@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // allocate the square matrices
+    // allocate the array
     float (*restrict A)[size] = malloc(sizeof(float)*size*size);
     float (*restrict B)[size] = malloc(sizeof(float)*size*size);
     float (*restrict C)[size] = malloc(sizeof(float)*size*size);
