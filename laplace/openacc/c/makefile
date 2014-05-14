@@ -4,7 +4,7 @@ CFLAGS=-acc -Minfo=accel -ta=nvidia,time $(INC)
 CFLAGS_S=$(INC)
 LAP_ACC=laplace_openacc.c
 CUDA_CAST_ACC=laplace_openacc_cudacast.c
-MM_ACC=laplace_openacc.c
+MM_ACC=mm_acc.c
 
 lapacc: $(LAP_ACC)
 	$(CC) $(CFLAGS) $(LAP_ACC) -o $@.out

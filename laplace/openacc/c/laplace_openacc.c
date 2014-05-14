@@ -94,11 +94,8 @@ int main(int argc, char* argv[])
     free_dynamic_2d_array(told);
 
     // Print out the execution time.
-    //clock_t time2=clock()-time1;
-    double runtime = GetTimer();
+    real runtime = GetTimer();
     printf(" total time: %f sec\n", runtime / 1000);
-    //int msec=time2/CLOCKS_PER_SEC;
-    //printf("\nTotal Time (sec): %d.\n",msec);
 
     return 0;
 

@@ -30,35 +30,44 @@ int main(int argc, char** argv) {
     real sum;
     char fmt_string[]="%5.1f ";
 
-    for (i = 0; i < nra; i++){
-        for (j = 0; j < nca; j++){
-            a[i][j] = (real)(i+j);
-        }
-    }
+#pragma acc data create(a[0:nra][0:nca],b[0:nca][0:ncb]) copyout(c[0:nra][0:ncb])
+    {
 
-    for (j = 0; j < nca; j++){
-        for (k = 0; k < ncb; k++){
-            b[j][k] = (real)(j*k);
-        }
-    }
-
-    for (i = 0; i < nra; i++){
-        for (k = 0; k < ncb; k++){
-            c[i][k] = 0.0;
-        }
-    }
-
-#pragma acc parallel loop copyin(a,b) copyout(c)
-    for (i = 0; i < nra; i++){
-        for (k = 0; k < ncb; k++){
-            sum = 0.0;
+#pragma acc parallel loop 
+        for (i = 0; i < nra; i++){
             for (j = 0; j < nca; j++){
-                sum = sum + a[i][j] * b[j][k];
+                a[i][j] = (real)(i+j);
             }
-            c[i][k] = sum;
+        }
+
+#pragma acc parallel loop 
+        for (j = 0; j < nca; j++){
+            for (k = 0; k < ncb; k++){
+                b[j][k] = (real)(j*k);
+            }
+        }
+
+#pragma acc parallel loop 
+        for (i = 0; i < nra; i++){
+            for (k = 0; k < ncb; k++){
+                c[i][k] = 0.0;
+            }
+        }
+
+#pragma acc kernels
+        for (i = 0; i < nra; i++){
+            for (k = 0; k < ncb; k++){
+                sum = 0.0;
+                for (j = 0; j < nca; j++){
+                    sum = sum + a[i][j] * b[j][k];
+                }
+                c[i][k] = sum;
+            }
         }
     }
 
+    real runtime = GetTimer();
+    printf(" total time: %f sec\n", runtime / 1000);
     ///* output A matrix*/
     //printf("\n A=\n");
     //print_matrix(a,nra,nca,fmt_string);
@@ -69,7 +78,7 @@ int main(int argc, char** argv) {
 
     ///* output C matrix*/
     //printf("\n C=\n");
-    print_matrix(c,nra,nca,fmt_string);
+    //print_matrix(c,nra,nca,fmt_string);
 
     /* do not forget to free your memory */
     free_dynamic_2d_array(a);
