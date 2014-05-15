@@ -37,14 +37,17 @@ int main(int argc, char** argv)
     int nn=n;
     int mm=m;
 
-    real **restrict A   =allocate_dynamic_2d_array(NN,NM);
+    real **restrict A      =allocate_dynamic_2d_array(NN,NM);
     real **restrict Anew   =allocate_dynamic_2d_array(NN,NM);
 
     //real **restrict A   =allocate_dynamic_2d_array(n,m);
     //real **restrict Anew   =allocate_dynamic_2d_array(n,m);
 
-    memset(A[0], 0, n * m * sizeof(double));
-    memset(Anew[0], 0, n * m * sizeof(double));
+    //memset(A[0], 0, n * m * sizeof(double));
+    //memset(Anew[0], 0, n * m * sizeof(double));
+    for (int i=0; i<n; i++)
+        for (int j=0; j<m; j++) 
+            A[i][j]=0.0, Anew[i][j]=0.0;
 
     for (int j = 0; j < n; j++)
     {
@@ -57,13 +60,13 @@ int main(int argc, char** argv)
     StartTimer();
     int iter = 0;
 
-    //#pragma acc data copy(A[nn][mm]), create(Anew[nn][mm])
+#pragma acc data copy(A[0:n][0:m]), create(Anew[0:n][0:m])
     //#pragma acc data copy(A), create(Anew)
     while ( error > tol && iter < iter_max )
     {
         error = 0.0;
 
-//#pragma omp parallel for shared(m, n, Anew, A)
+        //#pragma omp parallel for shared(m, n, Anew, A)
 #pragma acc kernels
         for( int j = 1; j < n-1; j++)
         {
@@ -75,7 +78,7 @@ int main(int argc, char** argv)
             }
         }
 
-//#pragma omp parallel for shared(m, n, Anew, A)
+        //#pragma omp parallel for shared(m, n, Anew, A)
 #pragma acc kernels
         for( int j = 1; j < n-1; j++)
         {
