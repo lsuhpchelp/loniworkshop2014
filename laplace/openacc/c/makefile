@@ -7,6 +7,7 @@ LAP_ACC=laplace_openacc.c
 CUDA_CAST_ACC=laplace_openacc_cudacast.c
 MM_ACC=mm_acc.c
 PI_ACC=pi_acc.c
+SAXPY_ACC=saxpy_acc.c
 
 lapacc: $(LAP_ACC)
 	$(CC) $(CFLAGS) $(LAP_ACC) -o $@.out
@@ -28,3 +29,6 @@ piacc: $(PI_ACC)
 
 pis: $(PI_ACC)
 	$(CC) $(CFLAGS_S) $(PI_ACC) -o $@.out
+
+saxpyacc: $(SAXPY_ACC)
+	$(CC) $(CFLAGS) $(SAXPY_ACC) -o $@.out

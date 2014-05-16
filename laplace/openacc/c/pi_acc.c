@@ -24,6 +24,7 @@ int main() {
     real runtime = GetTimer();
     printf(" total time: %f sec\n", runtime / 1000);
 
+    // omp run
     int omp_threads=omp_get_num_procs();
     sum = 0.0;
     StartTimer();
@@ -40,6 +41,7 @@ int main() {
     runtime = GetTimer();
     printf(" total time: %f sec, using %d omp threads.\n", runtime / 1000, omp_threads);
 
+    // serial run
     sum = 0.0;
     StartTimer();
     for (i = 0; i < n; i++) {
