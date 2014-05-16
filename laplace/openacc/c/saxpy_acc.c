@@ -2,7 +2,7 @@
 #include <math.h>
 #include "timer.h"
 
-typedef double real;
+typedef float real;
 
 int main() {
     long long int i, n=500000000;
@@ -20,12 +20,12 @@ int main() {
     }
 
     StartTimer();
-#pragma acc parallel loop // private(i), firstprivate(a)
+#pragma acc parallel loop private(i), firstprivate(a)
     for (i = 0; i < n; i++){
         y[i] = a*x[i] + y[i];
     }
     runtime = GetTimer();
-    printf(" total acc time: %f sec", runtime/1000);
+    printf(" total acc time: %f sec\n", runtime/1000);
 
     free(x);
     free(y);
