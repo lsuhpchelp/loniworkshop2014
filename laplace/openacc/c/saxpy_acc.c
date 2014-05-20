@@ -4,12 +4,17 @@
 
 typedef float real;
 
-int main() {
-    long long int i, n=500000000;
+int main(int argc, char** argv) {
+    //long long int i, n=500000000;
+    long long int i, n;
     float a=2.0;
-    real *restrict x;
-    real *restrict y;
+    //real *restrict x;
+    //real *restrict y;
+    real * x;
+    real * y;
     real runtime;
+
+    n=atoi(argv[1]);
 
     x = (real*)malloc(n*sizeof(real));
     y = (real*)malloc(n*sizeof(real));
@@ -20,7 +25,7 @@ int main() {
     }
 
     StartTimer();
-#pragma acc parallel loop private(i), firstprivate(a)
+#pragma acc parallel loop private(i) firstprivate(a)
     for (i = 0; i < n; i++){
         y[i] = a*x[i] + y[i];
     }

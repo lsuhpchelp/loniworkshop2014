@@ -5,7 +5,7 @@
 #include "timer.h"
 #include "dynamic_2d_array.h"             
 
-int matmul_acc(real **a, real **b, real **c,int nra,int nca, int ncb);
+int matmul_acc(real **a, real **b, real **c);
 
 int main(int argc, char** argv) {
     // Exit if the number of arguments is not 6.
@@ -24,8 +24,7 @@ int main(int argc, char** argv) {
     
     // Get some timing information.
     int i,j,k;
-    //real **restrict a, **restrict b, **restrict c;
-    real **a, **b, **c;
+    real **restrict a, **restrict b, **restrict c;
     real **cs, **comp;
     real sum;
 
@@ -56,14 +55,26 @@ int main(int argc, char** argv) {
 
     // get the time info for the acc version
     StartTimer();
-    matmul_acc(a, b, c, nra, nca, ncb);
+#pragma acc data copyin(a[0:nra][0:nca],b[0:nca][0:ncb]) copy(c[0:nra][0:ncb])
+//#pragma acc data create(a[0:nra][0:nca],b[0:nca][0:ncb],c[0:nra][0:ncb])
+    {
+#pragma acc kernels
+        for (i = 0; i < nra; i++){
+            for (k = 0; k < ncb; k++){
+                sum = 0.0;
+                for (j = 0; j < nca; j++){
+                    sum += a[i][j] * b[j][k];
+                }
+                c[i][k] = sum;
+            }
+        }
+    }
     real runtime = GetTimer();
     printf(" total acc time: %f sec\n", runtime / 1000);
 
     // get the time info for the omp version
     
     int omp_threads=omp_get_num_procs();
-    printf(" total num of procs: %d\n", omp_threads);
     int ii;
     const int num_omp_tests=5;
     int ompt[num_omp_tests];
@@ -133,21 +144,7 @@ int main(int argc, char** argv) {
     free_dynamic_2d_array(comp);
 }
 
-int matmul_acc(real **a, real **b, real **restrict c,int nra,int nca, int ncb){
-    int i, j, k;
-    real sum;
-#pragma acc data copyin(a[0:nra][0:nca],b[0:nca][0:ncb]) copy(c[0:nra][0:ncb])
-    {
-#pragma acc kernels
-        for (i = 0; i < nra; i++){
-            for (k = 0; k < ncb; k++){
-                sum = 0.0;
-                for (j = 0; j < nca; j++){
-                    sum += a[i][j] * b[j][k];
-                }
-                c[i][k] = sum;
-            }
-        }
-    }
+int matmul_acc(real **a, real **b, real **c){
+    
 }
 

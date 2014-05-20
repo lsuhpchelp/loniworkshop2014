@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
     }
 
     // Main loop.
-//#pragma acc data copy(told[0:nr2][0:nc2]), create(t[0:nr2][0:nc2])
+#pragma acc data copy(told[0:nr2][0:nc2]), create(t[0:nr2][0:nc2])
     for (iter=1;iter<=niter;iter++) {
 
 #pragma acc parallel loop
