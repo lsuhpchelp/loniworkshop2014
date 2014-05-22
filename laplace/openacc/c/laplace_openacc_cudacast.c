@@ -22,27 +22,22 @@
 #define NN 4096
 #define NM 4096
 
-//double A[NN][NM];
-//double Anew[NN][NM];
-
 int main(int argc, char** argv)
 {
     const int n = NN;
     const int m = NM;
-    //const int iter_max = 1000;
-    const int iter_max = 500;
+    const int iter_max = 1000;
 
     const double tol = 1.0e-6;
     double error     = 1.0;
-    int nn=n;
-    int mm=m;
 
-    real **restrict A      =allocate_dynamic_2d_array(NN,NM);
-    real **restrict Anew   =allocate_dynamic_2d_array(NN,NM);
+    real A[n][m];
+    real Anew[n][m];
 
     //real **restrict A   =allocate_dynamic_2d_array(n,m);
     //real **restrict Anew   =allocate_dynamic_2d_array(n,m);
 
+    // Suggest not to do such kind of initialization
     //memset(A[0], 0, n * m * sizeof(double));
     //memset(Anew[0], 0, n * m * sizeof(double));
     for (int i=0; i<n; i++)
@@ -60,30 +55,26 @@ int main(int argc, char** argv)
     StartTimer();
     int iter = 0;
 
-#pragma acc data copy(A[0:n][0:m]), create(Anew[0:n][0:m])
-    //#pragma acc data copy(A), create(Anew)
+    //#pragma acc data copy(A[0:n][0:m]), create(Anew[0:n][0:m])
+#pragma acc data copy(A), create(Anew)
     while ( error > tol && iter < iter_max )
     {
         error = 0.0;
 
-        //#pragma omp parallel for shared(m, n, Anew, A)
+#pragma omp parallel for shared(m, n, Anew, A)
 #pragma acc kernels
-        for( int j = 1; j < n-1; j++)
-        {
-            for( int i = 1; i < m-1; i++ )
-            {
+        for( int j = 1; j < n-1; j++) {
+            for( int i = 1; i < m-1; i++ ) {
                 Anew[j][i] = 0.25 * ( A[j][i+1] + A[j][i-1]
                         + A[j-1][i] + A[j+1][i]);
                 error = fmax( error, fabs(Anew[j][i] - A[j][i]));
             }
         }
 
-        //#pragma omp parallel for shared(m, n, Anew, A)
+#pragma omp parallel for shared(m, n, Anew, A)
 #pragma acc kernels
-        for( int j = 1; j < n-1; j++)
-        {
-            for( int i = 1; i < m-1; i++ )
-            {
+        for( int j = 1; j < n-1; j++) {
+            for( int i = 1; i < m-1; i++ ) {
                 A[j][i] = Anew[j][i];    
             }
         }
@@ -93,9 +84,9 @@ int main(int argc, char** argv)
         iter++;
     }
 
-    free_dynamic_2d_array(A);
-    free_dynamic_2d_array(Anew);
-    double runtime = GetTimer();
+    //free_dynamic_2d_array(A);
+    //free_dynamic_2d_array(Anew);
+    real runtime = GetTimer();
 
     printf(" total: %f s\n", runtime / 1000);
 }

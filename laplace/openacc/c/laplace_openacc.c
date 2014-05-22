@@ -62,7 +62,6 @@ int main(int argc, char* argv[])
     for (iter=1;iter<=niter;iter++) {
 
 #pragma acc parallel loop
-        //#pragma acc kernels 
         for (i=1;i<=nr;i++)
             for (j=1;j<=nc;j++)
                 t[i][j]=0.25*(told[i+1][j]+told[i-1][j]+told[i][j-1]+told[i][j+1]);
@@ -70,7 +69,6 @@ int main(int argc, char* argv[])
         dt=0;
 
 #pragma acc parallel loop
-        //#pragma acc kernels
         for (i=1;i<=nr;i++) {
             for (j=1;j<=nc;j++) {
                 dt=fmax(fabs(t[i][j]-told[i][j]),dt);
