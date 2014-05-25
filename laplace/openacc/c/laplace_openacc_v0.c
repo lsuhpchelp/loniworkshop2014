@@ -34,18 +34,13 @@ int main(int argc, char** argv)
     real A[n][m];
     real Anew[n][m];
 
-    //real **restrict A   =allocate_dynamic_2d_array(n,m);
-    //real **restrict Anew   =allocate_dynamic_2d_array(n,m);
-
-    // Suggest not to do such kind of initialization
-    //memset(A[0], 0, n * m * sizeof(double));
-    //memset(Anew[0], 0, n * m * sizeof(double));
     for (int i=0; i<n; i++)
-        for (int j=0; j<m; j++) 
-            A[i][j]=0.0, Anew[i][j]=0.0;
+        for (int j=0; j<m; j++) {
+            A[i][j]=0.0;
+            Anew[i][j]=0.0;
+        }
 
-    for (int j = 0; j < n; j++)
-    {
+    for (int j = 0; j < n; j++) {
         A[j][0]    = 1.0;
         Anew[j][0] = 1.0;
     }
@@ -64,6 +59,7 @@ int main(int argc, char** argv)
 #pragma omp parallel for shared(m, n, Anew, A)
 #pragma acc kernels
         for( int j = 1; j < n-1; j++) {
+#pragma acc loop gang(16), vector(32)
             for( int i = 1; i < m-1; i++ ) {
                 Anew[j][i] = 0.25 * ( A[j][i+1] + A[j][i-1]
                         + A[j-1][i] + A[j+1][i]);
@@ -74,6 +70,7 @@ int main(int argc, char** argv)
 #pragma omp parallel for shared(m, n, Anew, A)
 #pragma acc kernels
         for( int j = 1; j < n-1; j++) {
+#pragma acc loop gang(16), vector(32)
             for( int i = 1; i < m-1; i++ ) {
                 A[j][i] = Anew[j][i];    
             }
