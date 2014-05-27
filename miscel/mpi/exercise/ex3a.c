@@ -30,10 +30,8 @@ int main(int argc, char* argv[])
   if (myid == 0) 
     printf("\n");
 
-  // Send local max to the root process to find the global error.
-  // Distribute global max to all processes.
-
-  MPI_Allreduce(&max_local,&max_global,1,MPI_INT,MPI_MAX,MPI_COMM_WORLD);
+  // blank 1: find the global minimum and distribute the result to all processes.
+  // hint: should be able to use only one MPI call
 
   printf("Process %d has the global maximum as %d\n",myid,max_global);
   

@@ -33,9 +33,8 @@ write(*,'(10(I4,1X))') a
 ! Find the local max
 max_local=maxval(a)
 
-! Send local max to the root process
-! Distribute the global max to all processes
-call mpi_allreduce(max_local,max_global,1,mpi_integer,MPI_MAX,mpi_comm_world,ierr)
+! blank 1: find the global minimum and distribute the result to all processes.
+! hint: should be able to use only one MPI call.
 
 write(*,'("Process",I3," has the global max as",I4)') myid,max_global
 
