@@ -1,0 +1,64 @@
+#!/bin/bash
+
+#PBS -q gpu
+#PBS -l walltime=2:00:00
+#PBS -l nodes=1:ppn=16
+#PBS -o saxpy-omp-acc.dat
+#PBS -j oe
+#PBS -N saxpy-openmp-openacc
+
+cd $PBS_O_WORKDIR
+
+echo 
+echo ===========================================================
+echo
+make clean all -f Makefile_f90
+echo ===========================================================
+make clean all -f Makefile_c
+echo
+echo ===========================================================
+echo
+
+echo "Serial F90 Code"
+./saxpyf
+echo
+
+echo "OpenMP F90 Code"
+for i in $(seq 1 16); do
+	echo "Threads=$i"
+	OMP_NUM_THREADS=$i ./saxpyf_omp
+done
+echo
+
+export PGI_ACC_TIME=1
+echo "CUDA F90 Code"
+./saxpyf_cuda
+echo
+
+echo "OpenACC F90 Code"
+./saxpyf_acc
+echo
+
+echo ================================================================
+echo
+
+echo "Serial C Code"
+./saxpyc
+echo
+
+echo "OpenMP C Code"
+for i in $(seq 1 16); do
+	echo "Threads=$i"
+	OMP_NUM_THREADS=$i ./saxpyc_omp
+done
+echo
+
+export PGI_ACC_TIME=1
+echo "OpenACC C Code"
+./saxpyc_acc
+echo
+
+echo ================================================================
+echo
+
+exit

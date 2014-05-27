@@ -1,0 +1,56 @@
+#!/bin/bash
+
+#PBS -q gpu
+#PBS -l walltime=2:00:00
+#PBS -l nodes=1:ppn=16
+#PBS -o saxpy-omp-acc.dat
+#PBS -j oe
+#PBS -N saxpy-openmp-openacc
+#PBS -m apacheco@cct.lsu.edu
+#PBS -M ae
+
+cd $PBS_O_WORKDIR
+
+echo 
+echo ==========================================================
+make clean all -f Makefile_c
+echo 
+echo ==========================================================
+make clean all -f Makefile_f90
+echo ==========================================================
+echo 
+
+echo "Serial F90 Code"
+./saxpyf
+echo
+echo "OpenMP F90 Code 8 Threads"
+OMP_NUM_THREADS=8 ./saxpyf_omp
+echo
+echo "OpenMP F90 Code 16 Threads"
+OMP_NUM_THREADS=16 ./saxpyf_omp
+echo
+echo "OpenACC F90 Code"
+./saxpyf_acc
+echo
+
+echo ==========================================================
+echo 
+
+echo "Serial C Code"
+./saxpyc
+echo
+
+echo "OpenMP C Code 8 Threads"
+OMP_NUM_THREADS=8 ./saxpyc_omp
+echo
+echo "OpenMP C Code 16 Threads"
+OMP_NUM_THREADS=16 ./saxpyc_omp
+echo
+
+echo "OpenACC C Code"
+./saxpyc_acc
+echo
+echo ==========================================================
+echo 
+
+exit

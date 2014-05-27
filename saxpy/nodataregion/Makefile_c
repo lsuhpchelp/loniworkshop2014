@@ -1,0 +1,22 @@
+ifeq ($(COMP),gnu)
+	CC=gcc
+	FC=gfortran
+	CFLAGS=
+	OFLAGS=-fopenmp $(CFLAGS)
+else
+	CC=pgcc
+	FC=pgf90
+	CFLAGS=
+	OFLAGS=-mp $(CFLAGS)
+	AFLAGS=-acc -ta=nvidia -Minfo=accel $(CFLAGS)
+endif
+
+all: saxpyc saxpyc_omp saxpyc_acc
+saxpyc:
+	$(CC) $(CFLAGS) -o saxpyc saxpy.c
+saxpyc_omp:
+	$(CC) $(OFLAGS) -o saxpyc_omp saxpy_omp.c
+saxpyc_acc:
+	$(CC) $(AFLAGS) -o saxpyc_acc saxpy_acc.c
+clean:
+	rm -rf saxpy.o saxpy_omp.o saxpy_acc.o saxpyc saxpyc_omp saxpyc_acc
