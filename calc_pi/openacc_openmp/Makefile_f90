@@ -1,0 +1,26 @@
+ifeq ($(COMP),gnu)
+	CC = gcc
+	FC = gfortran
+	CFLAGS = -fno-range-check
+	OFLAGS = -fopenmp $(CFLAGS)
+	BIN = pif pif_omp pif_ompr
+else
+	CC = pgcc
+	FC = pgf90
+	CFLAGS =
+	OFLAGS = -mp
+	AFLAGS = -acc -ta=nvidia -Minfo=accel
+	BIN = pif pif_omp pif_ompr pif_acc
+endif
+
+all: $(BIN)
+pif:
+	$(FC) $(CFLAGS) -o pif pi_serial.f90
+pif_omp:
+	$(FC) $(OFLAGS) -o pif_omp pi_omp1.f90
+pif_ompr:
+	$(FC) $(OFLAGS) -o pif_ompr pi_omp.f90
+pif_acc:
+	$(FC) $(AFLAGS) -o pif_acc pi_acc.f90
+clean:
+	rm -rf *~ $(BIN)

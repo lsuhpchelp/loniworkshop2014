@@ -1,0 +1,255 @@
+--------------------------------------
+Running PBS prologue script
+--------------------------------------
+User and Job Data:
+--------------------------------------
+Job ID:    28254.mike3
+Username:  apacheco
+Group:     Admins
+Date:      10-Jun-2013 09:43
+Node:      mike414 (52418)
+--------------------------------------
+PBS has allocated the following nodes:
+
+mike414
+
+A total of 16 processors on 1 nodes allocated
+---------------------------------------------
+Check nodes and clean them of stray processes
+---------------------------------------------
+Checking node mike414 09:43:31 
+Done clearing all the allocated nodes
+------------------------------------------------------
+Concluding PBS prologue script - 10-Jun-2013 09:43:31
+------------------------------------------------------
+
+===========================================================
+
+rm -rf saxpyf saxpyf_omp saxpyf_acc saxpyf_cuda *~
+pgf90  -o saxpyf saxpy.f90
+pgf90 -mp -o saxpyf_omp saxpy_omp.f90
+pgf90 -acc -ta=nvidia -Minfo=accel -o saxpyf_acc saxpy_acc.f90
+saxpy:
+     13, Generating local(y(:))
+         Generating local(x(:))
+         Generating copyin(a)
+     14, Accelerator kernel generated
+         14, CC 1.0 : 7 registers; 32 shared, 0 constant, 0 local memory bytes
+             CC 2.0 : 10 registers; 0 shared, 48 constant, 0 local memory bytes
+         15, !$acc loop vector(256) ! threadidx%x
+     14, Generating local(x(:))
+         Generating compute capability 1.0 binary
+         Generating compute capability 2.0 binary
+     15, Loop is parallelizable
+     17, Accelerator kernel generated
+         17, CC 1.0 : 7 registers; 32 shared, 0 constant, 0 local memory bytes
+             CC 2.0 : 10 registers; 0 shared, 48 constant, 0 local memory bytes
+         18, !$acc loop vector(256) ! threadidx%x
+     17, Generating local(y(:))
+         Generating compute capability 1.0 binary
+         Generating compute capability 2.0 binary
+     18, Loop is parallelizable
+     22, Accelerator kernel generated
+         22, CC 1.0 : 7 registers; 48 shared, 4 constant, 0 local memory bytes
+             CC 2.0 : 15 registers; 0 shared, 64 constant, 0 local memory bytes
+         23, !$acc loop gang, vector(256) ! blockidx%x threadidx%x
+     22, Generating local(y(:))
+         Generating local(x(:))
+         Generating compute capability 1.0 binary
+         Generating compute capability 2.0 binary
+make: *** No rule to make target `saxpyf_cuda', needed by `all'.  Stop.
+===========================================================
+rm -rf saxpyc saxpyc_omp saxpyc_acc *~
+pgcc  -o saxpyc saxpy.c
+pgcc -mp  -o saxpyc_omp saxpy_omp.c
+pgcc -acc -ta=nvidia -Minfo=accel  -o saxpyc_acc saxpy_acc.c
+main:
+     13, Generating local(y[0:n])
+         Generating local(x[0:n])
+         Generating copyin(a)
+     15, Generating local(y[0:n])
+         Generating local(x[0:n])
+         Generating compute capability 1.0 binary
+         Generating compute capability 2.0 binary
+     16, Loop is parallelizable
+         Accelerator kernel generated
+         16, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+             CC 1.0 : 10 registers; 44 shared, 4 constant, 0 local memory bytes
+             CC 2.0 : 15 registers; 0 shared, 60 constant, 0 local memory bytes
+     22, Generating local(x[0:n])
+         Generating local(y[0:n])
+         Generating compute capability 1.0 binary
+         Generating compute capability 2.0 binary
+     24, Loop is parallelizable
+         Accelerator kernel generated
+         24, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+             CC 1.0 : 11 registers; 52 shared, 0 constant, 0 local memory bytes
+             CC 2.0 : 16 registers; 0 shared, 68 constant, 0 local memory bytes
+
+===========================================================
+
+Serial F90 Code
+SAXPY Time: 0.990652
+
+OpenMP F90 Code
+Threads=1
+SAXPY Time: 1.028416
+Threads=2
+SAXPY Time: 0.555489
+Threads=3
+SAXPY Time: 0.367353
+Threads=4
+SAXPY Time: 0.326965
+Threads=5
+SAXPY Time: 0.333920
+Threads=6
+SAXPY Time: 0.240544
+Threads=7
+SAXPY Time: 0.249410
+Threads=8
+SAXPY Time: 0.237145
+Threads=9
+SAXPY Time: 0.250780
+Threads=10
+SAXPY Time: 0.239442
+Threads=11
+SAXPY Time: 0.249974
+Threads=12
+SAXPY Time: 0.242146
+Threads=13
+SAXPY Time: 0.252563
+Threads=14
+SAXPY Time: 0.243918
+Threads=15
+SAXPY Time: 0.251407
+Threads=16
+SAXPY Time: 0.244339
+
+CUDA F90 Code
+/var/spool/torque/mom_priv/jobs/28254.mike3.SC: line 30: ./saxpyf_cuda: No such file or directory
+
+OpenACC F90 Code
+
+Accelerator Kernel Timing data
+/work/apacheco/2013-LONI/openmp/saxpy/solution/saxpy_acc.f90
+  saxpy
+    22: region entered 1 time
+        time(us): total=59,089
+                  kernels=58,946
+        22: kernel launched 1 times
+            grid: [65535]  block: [256]
+            time(us): total=58,946 max=58,946 min=58,946 avg=58,946
+/work/apacheco/2013-LONI/openmp/saxpy/solution/saxpy_acc.f90
+  saxpy
+    17: region entered 1 time
+        time(us): total=278,155
+                  kernels=278,024
+        17: kernel launched 1 times
+            grid: [1]  block: [256]
+            time(us): total=278,024 max=278,024 min=278,024 avg=278,024
+/work/apacheco/2013-LONI/openmp/saxpy/solution/saxpy_acc.f90
+  saxpy
+    14: region entered 1 time
+        time(us): total=278,422
+                  kernels=278,254
+        14: kernel launched 1 times
+            grid: [1]  block: [256]
+            time(us): total=278,254 max=278,254 min=278,254 avg=278,254
+/work/apacheco/2013-LONI/openmp/saxpy/solution/saxpy_acc.f90
+  saxpy
+    13: region entered 1 time
+        time(us): total=8,002,075 init=7,276,284 region=725,791
+                  data=1,267
+        w/o init: total=725,791 max=725,791 min=725,791 avg=725,791
+SAXPY Time:        0.059091in secs
+
+================================================================
+
+Serial C Code
+SAXPY Time: 0.510000
+
+OpenMP C Code
+Threads=1
+SAXPY Time: 0.593638
+Threads=2
+SAXPY Time: 0.318989
+Threads=3
+SAXPY Time: 0.219019
+Threads=4
+SAXPY Time: 0.186132
+Threads=5
+SAXPY Time: 0.181740
+Threads=6
+SAXPY Time: 0.177776
+Threads=7
+SAXPY Time: 0.167295
+Threads=8
+SAXPY Time: 0.179607
+Threads=9
+SAXPY Time: 0.173659
+Threads=10
+SAXPY Time: 0.182220
+Threads=11
+SAXPY Time: 0.174611
+Threads=12
+SAXPY Time: 0.185556
+Threads=13
+SAXPY Time: 0.178289
+Threads=14
+SAXPY Time: 0.183621
+Threads=15
+SAXPY Time: 0.178608
+Threads=16
+SAXPY Time: 0.184329
+
+OpenACC C Code
+
+Accelerator Kernel Timing data
+/work/apacheco/2013-LONI/openmp/saxpy/solution/saxpy_acc.c
+  main
+    22: region entered 1 time
+        time(us): total=58,248 init= region=58,247
+                  kernels=58,061
+        w/o init: total=58,247 max=58,247 min=58,247 avg=58,247
+        24: kernel launched 1 times
+            grid: [65535]  block: [128]
+            time(us): total=58,061 max=58,061 min=58,061 avg=58,061
+/work/apacheco/2013-LONI/openmp/saxpy/solution/saxpy_acc.c
+  main
+    15: region entered 1 time
+        time(us): total=34,486
+                  kernels=34,227
+        16: kernel launched 1 times
+            grid: [65535]  block: [128]
+            time(us): total=34,227 max=34,227 min=34,227 avg=34,227
+/work/apacheco/2013-LONI/openmp/saxpy/solution/saxpy_acc.c
+  main
+    13: region entered 1 time
+        time(us): total=7,461,816 init=7,256,116 region=205,700
+                  data=1,339
+        w/o init: total=205,700 max=205,700 min=205,700 avg=205,700
+SAXPY Time: 0.058249
+
+================================================================
+
+------------------------------------------------------
+Running PBS epilogue script    - 10-Jun-2013 09:44:49
+------------------------------------------------------
+Checking node mike414 (MS)
+Checking node mike414 ok
+------------------------------------------------------
+Concluding PBS epilogue script - 10-Jun-2013 09:44:52
+------------------------------------------------------
+Exit Status:     0
+Job ID:          28254.mike3
+Username:        apacheco
+Group:           Admins
+Job Name:        saxpy-openmp-openacc
+Session Id:      52417
+Resource Limits: ncpus=1,neednodes=1:ppn=16,nodes=1:ppn=16,walltime=02:00:00
+Resources Used:  cput=00:04:29,mem=7816816kb,vmem=8091156kb,walltime=00:01:20
+Queue Used:      gpu
+Account String:  hpc_hpcadmin
+Node:            mike414
+Process id:      53367
+------------------------------------------------------

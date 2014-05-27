@@ -1,0 +1,67 @@
+#!/bin/bash
+
+#PBS -q gpu
+#PBS -l walltime=1:00:00
+#PBS -l nodes=1:ppn=16
+#PBS -o calcpi-omp-acc.dat
+#PBS -j oe
+#PBS -N calcpi-openmp-openacc
+
+cd $PBS_O_WORKDIR
+
+echo 
+echo ===============================================
+make clean all -f Makefile_c
+echo 
+echo ===============================================
+make clean all -f Makefile_f90 
+echo 
+echo ===============================================
+echo 
+
+echo "Serial C Code"
+./pic
+echo
+
+echo "Serial F90 Code"
+./pif
+echo
+
+export OMP_NUM_THREADS=8
+echo "8 Threads"
+echo "OpenMP C Code with Atomic"
+./pic_omp
+echo 
+echo "OpenMP C Code with Reduction"
+./pic_ompr
+echo 
+echo "OpenMP F90 Code with Atomic"
+./pif_omp
+echo 
+echo "OpenMP F90 Code with Reduction"
+./pif_ompr
+echo 
+export OMP_NUM_THREADS=16
+echo "16 Threads"
+echo "OpenMP C Code with Atomic"
+./pic_omp
+echo 
+echo "OpenMP C Code with Reduction"
+./pic_ompr
+echo 
+echo "OpenMP F90 Code with Atomic"
+./pif_omp
+echo 
+echo "OpenMP F90 Code with Reduction"
+./pif_ompr
+echo 
+
+export PGI_ACC_TIME=1
+echo "OpenACC C Code"
+./pic_acc
+echo
+echo "OpenACC F90 Code"
+./pif_acc
+echo
+
+exit

@@ -1,0 +1,15 @@
+CC=pgcc
+FC=pgf90
+CFLAGS=
+OFLAGS=-mp
+AFLAGS=-acc -ta=nvidia -Minfo=accel
+
+all: saxpyf saxpyf_omp saxpyf_acc
+saxpyf:
+	$(FC) $(CFLAGS) -o saxpyf saxpy.f90
+saxpyf_omp:
+	$(FC) $(OFLAGS) -o saxpyf_omp saxpy_omp.f90
+saxpyf_acc:
+	$(FC) $(AFLAGS) -o saxpyf_acc saxpy_acc.f90
+clean:
+	rm -rf saxpy.o saxpy_omp.o saxpy_acc.o saxpyf saxpyf_omp saxpyf_acc

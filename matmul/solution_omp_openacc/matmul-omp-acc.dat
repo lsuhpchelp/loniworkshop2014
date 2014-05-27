@@ -1,0 +1,202 @@
+--------------------------------------
+Running PBS prologue script
+--------------------------------------
+User and Job Data:
+--------------------------------------
+Job ID:    28252.mike3
+Username:  apacheco
+Group:     Admins
+Date:      10-Jun-2013 09:38
+Node:      mike414 (51002)
+--------------------------------------
+PBS has allocated the following nodes:
+
+mike414
+
+A total of 16 processors on 1 nodes allocated
+---------------------------------------------
+Check nodes and clean them of stray processes
+---------------------------------------------
+Checking node mike414 09:39:01 
+Done clearing all the allocated nodes
+------------------------------------------------------
+Concluding PBS prologue script - 10-Jun-2013 09:39:01
+------------------------------------------------------
+
+=================================================
+rm -rf *~ matmulc matmulc_omp matmulc_acc
+pgcc  -o matmulc matmul.c
+pgcc -mp -o matmulc_omp matmul_omp.c
+pgcc -acc -ta=nvidia -Minfo=accel -o matmulc_acc matmul_acc.c
+main:
+     17, Generating local(c[0:][0:])
+         Generating local(b[0:][0:])
+         Generating local(a[0:][0:])
+     37, Accelerator kernel generated
+         37, CC 1.3 : 34 registers; 100 shared, 4 constant, 0 local memory bytes
+             CC 2.0 : 30 registers; 0 shared, 116 constant, 0 local memory bytes
+         38, #pragma acc loop gang /* blockIdx.x */
+         39, #pragma acc loop vector(256) /* threadIdx.x */
+     37, Generating local(c[0:][0:])
+         Generating local(a[0:][0:])
+         Generating local(b[0:][0:])
+         Generating compute capability 1.3 binary
+         Generating compute capability 2.0 binary
+     39, Loop is parallelizable
+     42, Loop is parallelizable
+
+=================================================
+rm -rf *~ matmulf matmulf_omp matmulf_acc
+pgf90  -o matmulf matmul.f90
+pgf90 -mp -o matmulf_omp matmul_omp.f90
+pgf90 -acc -ta=nvidia -Minfo=accel -o matmulf_acc matmul_acc.f90
+matrix_mul:
+     17, Generating local(c(:,:))
+         Generating local(b(:,:))
+         Generating local(a(:,:))
+     36, Accelerator kernel generated
+         36, CC 1.3 : 22 registers; 48 shared, 12 constant, 0 local memory bytes
+             CC 2.0 : 22 registers; 16 shared, 56 constant, 0 local memory bytes
+         37, !$acc loop gang ! blockidx%x
+         41, !$acc loop vector(256) ! threadidx%x
+     36, Generating local(a(:,:))
+         Generating local(b(:,:))
+         Generating compute capability 1.3 binary
+         Generating compute capability 2.0 binary
+     38, Loop is parallelizable
+     41, Loop is parallelizable
+
+=================================================
+
+Serial C Code
+Init Time:  0.018 Calc Time:  6.226 GFlops:   0.964
+
+Serial F90 Code
+Init Time:  0.053 Calc Time:  7.112 GFlops:   0.844
+
+OpenMP C Code
+Threads=1
+Init Time:  0.019 Calc Time:  6.316 GFlops:   0.950
+Threads=2
+Init Time:  0.018 Calc Time:  3.172 GFlops:   1.892
+Threads=3
+Init Time:  0.018 Calc Time:  2.116 GFlops:   2.835
+Threads=4
+Init Time:  0.018 Calc Time:  1.586 GFlops:   3.784
+Threads=5
+Init Time:  0.018 Calc Time:  1.309 GFlops:   4.584
+Threads=6
+Init Time:  0.018 Calc Time:  1.094 GFlops:   5.483
+Threads=7
+Init Time:  0.018 Calc Time:  0.941 GFlops:   6.374
+Threads=8
+Init Time:  0.019 Calc Time:  0.832 GFlops:   7.208
+Threads=9
+Init Time:  0.018 Calc Time:  0.755 GFlops:   7.950
+Threads=10
+Init Time:  0.018 Calc Time:  0.680 GFlops:   8.824
+Threads=11
+Init Time:  0.018 Calc Time:  0.623 GFlops:   9.637
+Threads=12
+Init Time:  0.018 Calc Time:  0.569 GFlops:  10.538
+Threads=13
+Init Time:  0.018 Calc Time:  0.543 GFlops:  11.044
+Threads=14
+Init Time:  0.018 Calc Time:  0.506 GFlops:  11.864
+Threads=15
+Init Time:  0.018 Calc Time:  0.469 GFlops:  12.791
+Threads=16
+Init Time:  0.018 Calc Time:  0.444 GFlops:  13.501
+
+OpenMP F90 Code
+Threads=1
+Init Time:  0.056 Calc Time:  7.099 GFlops:   0.845
+Threads=2
+Init Time:  0.053 Calc Time:  3.591 GFlops:   1.671
+Threads=3
+Init Time:  0.053 Calc Time:  2.404 GFlops:   2.496
+Threads=4
+Init Time:  0.053 Calc Time:  1.820 GFlops:   3.297
+Threads=5
+Init Time:  0.053 Calc Time:  1.473 GFlops:   4.073
+Threads=6
+Init Time:  0.053 Calc Time:  1.239 GFlops:   4.843
+Threads=7
+Init Time:  0.053 Calc Time:  1.063 GFlops:   5.644
+Threads=8
+Init Time:  0.053 Calc Time:  0.946 GFlops:   6.342
+Threads=9
+Init Time:  0.054 Calc Time:  0.860 GFlops:   6.977
+Threads=10
+Init Time:  0.053 Calc Time:  0.767 GFlops:   7.823
+Threads=11
+Init Time:  0.053 Calc Time:  0.697 GFlops:   8.608
+Threads=12
+Init Time:  0.053 Calc Time:  0.644 GFlops:   9.317
+Threads=13
+Init Time:  0.053 Calc Time:  0.604 GFlops:   9.934
+Threads=14
+Init Time:  0.053 Calc Time:  0.566 GFlops:  10.601
+Threads=15
+Init Time:  0.053 Calc Time:  0.534 GFlops:  11.236
+Threads=16
+Init Time:  0.053 Calc Time:  0.504 GFlops:  11.905
+
+OpenACC C Code
+
+Accelerator Kernel Timing data
+/work/apacheco/2013-LONI/openmp/matmul/solution/matmul_acc.c
+  main
+    37: region entered 1 time
+        time(us): total=174,611
+                  kernels=173,885
+        37: kernel launched 1 times
+            grid: [1500]  block: [256]
+            time(us): total=173,885 max=173,885 min=173,885 avg=173,885
+/work/apacheco/2013-LONI/openmp/matmul/solution/matmul_acc.c
+  main
+    17: region entered 1 time
+        time(us): total=7,523,852 init=7,333,695 region=190,157
+        w/o init: total=190,157 max=190,157 min=190,157 avg=190,157
+Init Time:  0.013 Calc Time:  0.175 GFlops:  34.361
+
+OpenACC F90 Code
+
+Accelerator Kernel Timing data
+/work/apacheco/2013-LONI/openmp/matmul/solution/matmul_acc.f90
+  matrix_mul
+    36: region entered 1 time
+        time(us): total=254,824 init= region=254,823
+                  kernels=254,112
+        w/o init: total=254,823 max=254,823 min=254,823 avg=254,823
+        36: kernel launched 1 times
+            grid: [2000]  block: [256]
+            time(us): total=254,112 max=254,112 min=254,112 avg=254,112
+/work/apacheco/2013-LONI/openmp/matmul/solution/matmul_acc.f90
+  matrix_mul
+    17: region entered 1 time
+        time(us): total=7,535,865 init=7,255,273 region=280,592
+        w/o init: total=280,592 max=280,592 min=280,592 avg=280,592
+Init Time:  0.023 Calc Time:  0.255 GFlops:  23.529
+
+------------------------------------------------------
+Running PBS epilogue script    - 10-Jun-2013 09:40:24
+------------------------------------------------------
+Checking node mike414 (MS)
+Checking node mike414 ok
+------------------------------------------------------
+Concluding PBS epilogue script - 10-Jun-2013 09:40:26
+------------------------------------------------------
+Exit Status:     0
+Job ID:          28252.mike3
+Username:        apacheco
+Group:           Admins
+Job Name:        matmul-openmp-openacc
+Session Id:      51001
+Resource Limits: ncpus=1,neednodes=1:ppn=16,nodes=1:ppn=16,walltime=01:00:00
+Resources Used:  cput=00:04:12,mem=55136kb,vmem=403196kb,walltime=00:01:25
+Queue Used:      gpu
+Account String:  hpc_hpcadmin
+Node:            mike414
+Process id:      51879
+------------------------------------------------------

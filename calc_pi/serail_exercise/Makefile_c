@@ -1,0 +1,17 @@
+CC=gcc
+FC=gfortran
+CFLAGS=
+OFLAGS=-fopenmp
+AFLAGS=-acc -ta=nvidia
+
+all: pic pic_omp pic_ompr pic_acc
+pic:
+	$(CC) $(CFLAGS) -o pic pi_serial.c
+pic_omp:
+	$(CC) $(OFLAGS) -o pic_omp pi_omp1.c
+pic_ompr:
+	$(CC) $(OFLAGS) -o pic_ompr pi_omp.c
+pic_acc:
+	$(CC) $(AFLAGS) -o pic_acc pi_acc.c
+clean:
+	rm -rf *.o *.*~

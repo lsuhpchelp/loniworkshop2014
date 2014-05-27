@@ -1,0 +1,106 @@
+--------------------------------------
+Running PBS prologue script
+--------------------------------------
+User and Job Data:
+--------------------------------------
+Job ID:    28226.mike3
+Username:  apacheco
+Group:     Admins
+Date:      09-Jun-2013 22:13
+Node:      mike413 (94896)
+--------------------------------------
+PBS has allocated the following nodes:
+
+mike413
+
+A total of 16 processors on 1 nodes allocated
+---------------------------------------------
+Check nodes and clean them of stray processes
+---------------------------------------------
+Checking node mike413 22:13:04 
+Done clearing all the allocated nodes
+------------------------------------------------------
+Concluding PBS prologue script - 09-Jun-2013 22:13:04
+------------------------------------------------------
+
+==========================================================
+rm -rf saxpy.o saxpy_omp.o saxpy_acc.o saxpyc saxpyc_omp saxpyc_acc
+pgcc  -o saxpyc saxpy.c
+pgcc -mp  -o saxpyc_omp saxpy_omp.c
+pgcc -acc -ta=nvidia -Minfo=accel  -o saxpyc_acc saxpy_acc.c
+main:
+     19, Generating copyin(x[0:500000000])
+         Generating copy(y[0:500000000])
+         Generating compute capability 1.0 binary
+         Generating compute capability 2.0 binary
+     21, Loop is parallelizable
+         Accelerator kernel generated
+         21, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+             CC 1.0 : 10 registers; 44 shared, 0 constant, 0 local memory bytes
+             CC 2.0 : 15 registers; 0 shared, 60 constant, 0 local memory bytes
+
+==========================================================
+rm -rf saxpy.o saxpy_omp.o saxpy_acc.o saxpyf saxpyf_omp saxpyf_acc
+pgf90  -o saxpyf saxpy.f90
+pgf90 -mp -o saxpyf_omp saxpy_omp.f90
+pgf90 -acc -ta=nvidia -Minfo=accel -o saxpyf_acc saxpy_acc.f90
+saxpy:
+     17, Accelerator kernel generated
+         17, CC 1.0 : 7 registers; 40 shared, 4 constant, 0 local memory bytes
+             CC 2.0 : 15 registers; 0 shared, 56 constant, 0 local memory bytes
+         18, !$acc loop gang, vector(256) ! blockidx%x threadidx%x
+     17, Generating copy(y(1:500000000))
+         Generating copyin(x(1:500000000))
+         Generating compute capability 1.0 binary
+         Generating compute capability 2.0 binary
+==========================================================
+
+Serial F90 Code
+SAXPY Time: 0.969819
+
+OpenMP F90 Code 8 Threads
+SAXPY Time: 0.237585
+
+OpenMP F90 Code 16 Threads
+SAXPY Time: 0.244417
+
+OpenACC F90 Code
+SAXPY Time:        9.188178
+
+==========================================================
+
+Serial C Code
+SAXPY Time: 0.511232
+
+OpenMP C Code 8 Threads
+SAXPY Time: 0.180301
+
+OpenMP C Code 16 Threads
+SAXPY Time: 0.184116
+
+OpenACC C Code
+SAXPY Time: 9.211521
+
+==========================================================
+
+------------------------------------------------------
+Running PBS epilogue script    - 09-Jun-2013 22:13:40
+------------------------------------------------------
+Checking node mike413 (MS)
+Checking node mike413 ok
+------------------------------------------------------
+Concluding PBS epilogue script - 09-Jun-2013 22:13:43
+------------------------------------------------------
+Exit Status:     0
+Job ID:          28226.mike3
+Username:        apacheco
+Group:           Admins
+Job Name:        saxpy-openmp-openacc
+Session Id:      94895
+Resource Limits: ncpus=1,neednodes=1:ppn=16,nodes=1:ppn=16,walltime=02:00:00
+Resources Used:  cput=00:01:02,mem=22192kb,vmem=349244kb,walltime=00:00:38
+Queue Used:      gpu
+Account String:  hpc_hpcadmin
+Node:            mike413
+Process id:      95545
+------------------------------------------------------
