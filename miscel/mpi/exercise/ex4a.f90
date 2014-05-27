@@ -80,7 +80,7 @@ program matrixtrans
 
   ! blank 1: Define new datatypes
   ! hint: we need to define a vector type (vector), then use it to assemble another
-  ! "submatrix" type (hvector).
+  ! "submatrix" type (hvector). A total of 4 MPI function calls are needed.
 
   ! Send the transposed sub-matrix to the root process to assemble
 
@@ -97,20 +97,22 @@ program matrixtrans
 
      do k=1,nprocs-1
 
-        ! Decide the location of the data in the global transposed matrix.
+        ! blank 2: Decide the location of the data in the global transposed matrix.
+        ! hint: Need to figure out the grid coordinate of kth process and the corresponding 
+        ! location in the transposed matrix.
 
         rowid=k/npdim(2)
         colid=k-rowid*npdim(2)
         ind_i=colid*nldim(2)+1
         ind_j=rowid*nldim(1)+1
 
-        ! blank 2: receive data from other processes.
+        ! blank 3: receive data from other processes.
 
      enddo
 
   else
 
-     ! blank 3: Send the data to the root process.
+     ! blank 4: Send the data to the root process.
 
   endif
 
