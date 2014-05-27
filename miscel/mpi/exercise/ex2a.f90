@@ -36,22 +36,22 @@ max_local=maxval(a)
 ! Send local max to the root process
 if (myid.eq.0) then
    do i=1,nprocs-1
-      call mpi_recv(max_global,1,mpi_integer,i,100,mpi_comm_world,status,ierr)
+
+! blank 1: the root process receives local maxima from other processes.
+
       max_local=max(max_local,max_global)
+
    enddo
+
    max_global=max_local
+
 else
-   call mpi_send(max_local,1,mpi_integer,0,100,mpi_comm_world,ierr)
+
+! blank 2: send the local maximum to the root process
+
 endif
 
-! Distribute the global max to all processes
-if (myid.eq.0) then
-   do i=1,nprocs-1
-      call mpi_send(max_global,1,mpi_integer,i,101,mpi_comm_world,ierr)
-   enddo
-else
-   call mpi_recv(max_global,1,mpi_integer,0,101,mpi_comm_world,status,ierr)
-endif
+! blank 3: distribute the global max to all processes
 
 write(*,'("Process",I3," has the global max as",I4)') myid,max_global
 

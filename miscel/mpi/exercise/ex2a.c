@@ -34,23 +34,20 @@ int main(int argc, char* argv[])
 
   if (myid == 0) {
     for(i=1;i<nprocs;i++) {
-      MPI_Recv(&max_global,1,MPI_INT,i,0,MPI_COMM_WORLD,&status);
+
+  // blank 1: the root process receives local maxima from other processes
+
       if (max_global > max_local)
 	max_local=max_global;
     }
     max_global=max_local;
   }
   else
+
+  // blank 2: send the local maximum to the root process
     MPI_Send(&max_local,1,MPI_INT,0,0,MPI_COMM_WORLD);
 
-  // Distribute global max to all processes.
-
-  if (myid == 0) {
-    for(i=1;i<nprocs;i++)
-      MPI_Send(&max_global,1,MPI_INT,i,0,MPI_COMM_WORLD);
-  }
-  else
-    MPI_Recv(&max_global,1,MPI_INT,0,0,MPI_COMM_WORLD,&status);
+  // blank 3: distribute global maximum to all processes.
 
   printf("Process %d has the global maximum as %d\n",myid,max_global);
   
