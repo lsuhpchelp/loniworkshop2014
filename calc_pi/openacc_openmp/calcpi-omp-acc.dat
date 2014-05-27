@@ -1,0 +1,170 @@
+--------------------------------------
+Running PBS prologue script
+--------------------------------------
+User and Job Data:
+--------------------------------------
+Job ID:    28224.mike3
+Username:  apacheco
+Group:     Admins
+Date:      09-Jun-2013 21:40
+Node:      mike413 (92126)
+--------------------------------------
+PBS has allocated the following nodes:
+
+mike413
+
+A total of 16 processors on 1 nodes allocated
+---------------------------------------------
+Check nodes and clean them of stray processes
+---------------------------------------------
+Checking node mike413 21:40:02 
+Done clearing all the allocated nodes
+------------------------------------------------------
+Concluding PBS prologue script - 09-Jun-2013 21:40:02
+------------------------------------------------------
+
+===============================================
+rm -rf *~ pic pic_omp pic_ompr pic_acc
+pgcc  -o pic pi_serial.c
+pgcc -mp -o pic_omp pi_omp1.c
+pgcc -mp -o pic_ompr pi_omp.c
+pgcc -acc -ta=nvidia -Minfo=accel -o pic_acc pi_acc.c
+main:
+     12, Generating copyout(sum)
+         Generating copyin(step)
+     15, Accelerator kernel generated
+         15, CC 1.3 : 23 registers; 80 shared, 40 constant, 0 local memory bytes
+             CC 2.0 : 27 registers; 0 shared, 108 constant, 0 local memory bytes
+         17, #pragma acc loop gang, vector(256) /* blockIdx.x threadIdx.x */
+     15, Generating compute capability 1.3 binary
+         Generating compute capability 2.0 binary
+
+===============================================
+rm -rf *~ pif pif_omp pif_ompr pif_acc
+pgf90  -o pif pi_serial.f90
+pgf90 -mp -o pif_omp pi_omp1.f90
+pgf90 -mp -o pif_ompr pi_omp.f90
+pgf90 -acc -ta=nvidia -Minfo=accel -o pif_acc pi_acc.f90
+pi_omp:
+     14, Generating copyout(sum)
+         Generating copyin(step)
+     17, Accelerator kernel generated
+         17, CC 1.3 : 23 registers; 48 shared, 36 constant, 0 local memory bytes
+             CC 2.0 : 25 registers; 0 shared, 76 constant, 0 local memory bytes
+         18, !$acc loop gang, vector(256) ! blockidx%x threadidx%x
+     17, Generating compute capability 1.3 binary
+         Generating compute capability 2.0 binary
+
+===============================================
+
+Serial C Code
+pi = 3.141592653589451
+time to compute = 134.122 seconds
+
+Serial F90 Code
+pi = 3.141592653789451
+time to compute =  133.815 seconds
+
+8 Threads
+OpenMP C Code with Atomic
+pi = 3.141592653582197
+time to compute = 192.524 seconds
+
+OpenMP C Code with Reduction
+pi = 3.141592653589691
+time to compute = 17.3341 seconds
+
+OpenMP F90 Code with Atomic
+pi = 3.141592653788740
+time to compute =  309.366 seconds
+
+OpenMP F90 Code with Reduction
+pi = 3.141592653789691
+time to compute =   17.349 seconds
+
+16 Threads
+OpenMP C Code with Atomic
+pi = 3.141592653592595
+time to compute = 263.858 seconds
+
+OpenMP C Code with Reduction
+pi = 3.141592653589856
+time to compute = 9.20987 seconds
+
+OpenMP F90 Code with Atomic
+pi = 3.141592653783650
+time to compute =  360.307 seconds
+
+OpenMP F90 Code with Reduction
+pi = 3.141592653789855
+time to compute =    9.201 seconds
+
+OpenACC C Code
+
+Accelerator Kernel Timing data
+/work/apacheco/2013-LONI/openmp/calc_pi/solution/pi_acc.c
+  main
+    15: region entered 1 time
+        time(us): total=152,782 init= region=152,781
+                  kernels=151,001
+        w/o init: total=152,781 max=152,781 min=152,781 avg=152,781
+        15: kernel launched 1 times
+            grid: [65535]  block: [256]
+            time(us): total=150,925 max=150,925 min=150,925 avg=150,925
+        16: kernel launched 1 times
+            grid: [1]  block: [256]
+            time(us): total=76 max=76 min=76 avg=76
+/work/apacheco/2013-LONI/openmp/calc_pi/solution/pi_acc.c
+  main
+    12: region entered 1 time
+        time(us): total=7,429,769 init=7,274,799 region=154,970
+                  data=1,643
+        w/o init: total=154,970 max=154,970 min=154,970 avg=154,970
+pi = 0.560331986334500
+time to compute = 0.152785 seconds
+
+OpenACC F90 Code
+
+Accelerator Kernel Timing data
+/work/apacheco/2013-LONI/openmp/calc_pi/solution/pi_acc.f90
+  pi_omp
+    17: region entered 1 time
+        time(us): total=148,604 init= region=148,603
+                  kernels=146,978
+        w/o init: total=148,603 max=148,603 min=148,603 avg=148,603
+        17: kernel launched 1 times
+            grid: [65535]  block: [256]
+            time(us): total=146,902 max=146,902 min=146,902 avg=146,902
+        18: kernel launched 1 times
+            grid: [1]  block: [256]
+            time(us): total=76 max=76 min=76 avg=76
+/work/apacheco/2013-LONI/openmp/calc_pi/solution/pi_acc.f90
+  pi_omp
+    14: region entered 1 time
+        time(us): total=7,434,283 init=7,283,489 region=150,794
+                  data=1,548
+        w/o init: total=150,794 max=150,794 min=150,794 avg=150,794
+pi = 0.560331986726702
+time to compute =    0.149 seconds
+
+------------------------------------------------------
+Running PBS epilogue script    - 09-Jun-2013 22:04:31
+------------------------------------------------------
+Checking node mike413 (MS)
+Checking node mike413 ok
+------------------------------------------------------
+Concluding PBS epilogue script - 09-Jun-2013 22:04:33
+------------------------------------------------------
+Exit Status:     0
+Job ID:          28224.mike3
+Username:        apacheco
+Group:           Admins
+Job Name:        calcpi-openmp-openacc
+Session Id:      92125
+Resource Limits: ncpus=1,neednodes=1:ppn=16,nodes=1:ppn=16,walltime=01:00:00
+Resources Used:  cput=04:06:54,mem=22300kb,vmem=352416kb,walltime=00:24:31
+Queue Used:      gpu
+Account String:  hpc_hpcadmin
+Node:            mike413
+Process id:      92867
+------------------------------------------------------
