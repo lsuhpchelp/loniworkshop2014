@@ -18,3 +18,5 @@ LONI workshop 2014 source code
 * Matmul (matrix multiplication)
 * Laplace (laplace solver)
 * Saxpy (y=a*x+b)
+* Hello (Simple hello world program)
+* Miscel (Miscelleneous exercises)
