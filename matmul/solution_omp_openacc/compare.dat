@@ -1,0 +1,3 @@
+Code	Serial	OpenMP (8 CPUs)		OpenMP (16 CPUs)	OpenACC
+C	6.226	0.832			0.444			0.175
+F90	7.112	0.946			0.504			0.255

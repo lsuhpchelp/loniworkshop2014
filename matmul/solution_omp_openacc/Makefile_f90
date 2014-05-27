@@ -1,0 +1,24 @@
+ifeq ($(COMP),gnu)
+	CC = gcc
+	FC = gfortran
+	CFLAGS =
+	OFLAGS = -fopenmp
+	BIN = matmulf matmulf_omp
+else
+	CC = pgcc
+	FC = pgf90
+	CFLAGS =
+	OFLAGS = -mp
+	AFLAGS = -acc -ta=nvidia -Minfo=accel
+	BIN = matmulf matmulf_omp matmulf_acc
+endif
+
+all: $(BIN)
+matmulf:
+	$(FC) $(CFLAGS) -o matmulf matmul.f90
+matmulf_omp:
+	$(FC) $(OFLAGS) -o matmulf_omp matmul_omp.f90
+matmulf_acc:
+	$(FC) $(AFLAGS) -o matmulf_acc matmul_acc.f90
+clean:
+	rm -rf *~ $(BIN)
