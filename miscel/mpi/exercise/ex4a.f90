@@ -78,34 +78,40 @@ program matrixtrans
      enddo
   enddo
 
-  ! Define new data types
-
-  call mpi_type_extent(mpi_integer,sizeofint,ierr)
-  call mpi_type_vector(nldim(1),1,ndim(2),mpi_integer,row_type,ierr)
-  call mpi_type_hvector(nldim(2),1,sizeofint,row_type,sub_mat_type,ierr)
-  call mpi_type_commit(sub_mat_type,ierr)
+  ! blank 1: Define new datatypes
+  ! hint: we need to define a vector type (vector), then use it to assemble another
+  ! "submatrix" type (hvector).
 
   ! Send the transposed sub-matrix to the root process to assemble
 
   if (myid.eq.0) then
+
      allocate(a_t(ndim(2),ndim(1)))
+
      ! Fill in the values for the sub-matrix owned by process 0.
      do i=1,nldim(1)
         do j=1,nldim(2)
            a_t(j,i)=i*100+j
         enddo
      enddo
+
      do k=1,nprocs-1
+
         ! Decide the location of the data in the global transposed matrix.
+
         rowid=k/npdim(2)
         colid=k-rowid*npdim(2)
         ind_i=colid*nldim(2)+1
         ind_j=rowid*nldim(1)+1
-        call mpi_recv(a_t(ind_i,ind_j),1,sub_mat_type,k,100,mpi_comm_world,status,ierr)
+
+        ! blank 2: receive data from other processes.
+
      enddo
+
   else
-     ! Send the data to the root process.
-     call mpi_send(alocal,nldim(1)*nldim(2),mpi_integer,0,100,mpi_comm_world,ierr)
+
+     ! blank 3: Send the data to the root process.
+
   endif
 
   ! Let the root process print out the first column of the transposed
