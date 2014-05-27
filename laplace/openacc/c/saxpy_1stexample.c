@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "timer.h"
 
 void saxpy(int n, float a, float *x, float *restrict y);
 
@@ -17,7 +18,13 @@ int main(int argc, char **argv) {
         y[i] = 1.0f;
     }
 
+    StartTimer();
     saxpy(n, 3.0f, x, y);
+    float runtime= GetTimer();
+    printf(" total function time: %f sec\n", runtime/1000);
+
+    free(x);
+    free(y);
 
     return 0;
 }
