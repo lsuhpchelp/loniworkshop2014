@@ -1,6 +1,7 @@
 CC=pgcc
 INC=-I../../serial/
-CFLAGS=-acc -Minfo=accel -ta=nvidia,time $(INC)
+#CFLAGS=-acc -Minfo=accel -ta=nvidia,time $(INC)
+CFLAGS=-acc -mp -Minfo=accel,mp -ta=nvidia,time $(INC)
 CFLAGS_OMP=-mp -Minfo=accel,mp -ta=nvidia,time $(INC)
 CFLAGS_S=$(INC)
 LAP_ACC=laplace_openacc.c

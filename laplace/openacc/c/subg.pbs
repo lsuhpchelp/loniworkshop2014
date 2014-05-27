@@ -11,5 +11,7 @@ cd $PBS_O_WORKDIR
 #./lapacc.out 4096 4096 1000 100 0.001
 #./laps.out 200 200 100 1 0.001
 #./cudas.out
-./mmacc.out 8000 8000 8000 1 0.001
+#./mmacc.out 8000 8000 8000 1 0.001
 #./piacc.out
+export PGI_ACC_TIME=1
+./bm_laplace.sh
