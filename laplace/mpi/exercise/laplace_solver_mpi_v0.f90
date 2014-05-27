@@ -16,10 +16,7 @@ module control_param
 
   parameter ( maxiter = 1000000 )
 
-  ! MPI related parameters
-
-  integer ierror,myid,nprocs
-  integer ncl           ! Number of columns per process
+  ! (blank 1: declare MPI related parameters)
 
 end module control_param
 
@@ -52,12 +49,9 @@ program laplace_main
   
   ! Now let's get into the program itself.
 
-  call mpi_init(ierror)
+  ! (blank 2: initialize MPI)
 
-  call mpi_comm_rank(mpi_comm_world,myid,ierror)
-  call mpi_comm_size(mpi_comm_world,nprocs,ierror)
-
-  write(*,'("This is process",I4," out of",I4," processes")') myid,nprocs
+  ! (blank 3: find the number of processes and the rank)
 
   call date_and_time(VALUES=time1)
 
@@ -104,16 +98,8 @@ program laplace_main
         niter = maxiter
      end if
 
-     if (mod(nc,nprocs).ne.0) then
-        if (myid.eq.0) then 
-           write(*,*) "Error: the number of columns is not multiple of the number of processes!"
-        endif
-        call mpi_finalize(ierror)
-        call exit(1)
-     endif
-
-     ncl=nc/nprocs
-     write(*,'("Process",I4," has column",I4," through",I4,".")') myid,myid*ncl+1,(myid+1)*ncl
+     ! (blank 4: calculate the number of columns per process and print the
+     ! columan range for each process)
 
      ! Without further ado (like checking for negative values),
      ! execute the computation.
@@ -126,7 +112,7 @@ program laplace_main
      write(*,*)
      write( *, '("Total Time (sec): ", e10.3)' ) 3600.*time3(5)+60.*time3(6)+1.*time3(7)+0.001*time3(8)
 
-     call mpi_finalize(ierror)
+     ! (blank 5: finalize MPI)
 
   end if
 
