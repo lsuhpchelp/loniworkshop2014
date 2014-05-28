@@ -22,10 +22,12 @@ int main (int argc, char *argv[])
     real** a;
     real** b;
     real** c;
-    
-    MPI_Init(&argc,&argv);
-    MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
-    MPI_Comm_size(MPI_COMM_WORLD,&nprocs);
+
+// blank 1: Initialize MPI   
+ 
+
+// blank 2: Find out the total number of process and the rank.
+
    
     if (4!=argc) {
         if (0==myrank)
@@ -82,7 +84,9 @@ int main (int argc, char *argv[])
     // find out current time
     start_time = MPI_Wtime();
 
-    for (i=myrank;i<nra;i+=nprocs)
+    // Matrix multiplication 
+
+    for (i= ) // blank 3: fill in the indices for i
     {
         for (j=0;j<ncb;j++)
         {
@@ -126,5 +130,6 @@ int main (int argc, char *argv[])
     }
     free(c);
 
-    MPI_Finalize(); 
+    // blank 4: Finalize MPI
+
 }
