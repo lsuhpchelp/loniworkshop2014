@@ -141,8 +141,8 @@ program ser_matmul
   ! Decompose A in 1-D in a blocked manner.
 
   cols=ncb/nprocs
-  jcb_start=myrank*cols+1
-  jcb_end=(myrank+1)*cols
+
+  ! blank 1: calculate the start and end indices for each process
 
   do i=1,nra
      do j=jcb_start,jcb_end
@@ -157,11 +157,11 @@ program ser_matmul
   if (myrank.eq.0) then
      
      do i=1,nprocs-1
-        call mpi_recv(c(1,i*cols+1),cols*nra,mpi_real8,i,1,mpi_comm_world,status,mpi_err)
+  !blank 2: receive data from other processes.
      enddo
 
   else
-     call mpi_send(c(1,myrank*cols+1),cols*nra,mpi_real8,0,1,mpi_comm_world,mpi_err)
+  ! blank 3: send data to the root process.
 
   endif
 
