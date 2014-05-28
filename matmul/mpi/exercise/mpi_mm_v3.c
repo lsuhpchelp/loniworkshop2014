@@ -106,8 +106,8 @@ int main (int argc, char *argv[])
                 c[i][j] += a[i][k]*b[k][j];
 	}
     
-    MPI_Gather(&c[myrank*rows][0],rows*nca,MPI_DOUBLE,&c[0][0],rows*nca,MPI_DOUBLE,0,MPI_COMM_WORLD);
-    
+    // blank 1: send the data to the root process.   
+ 
     // find out current time
     end_time = MPI_Wtime();
  

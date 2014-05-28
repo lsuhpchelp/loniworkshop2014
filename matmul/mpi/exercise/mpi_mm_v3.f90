@@ -152,11 +152,7 @@ program ser_matmul
      enddo
   enddo
 
-  ! Send the results back to the root process.
-
-  call mpi_gather(c(1,myrank*cols+1),cols*nra,mpi_real8, &
-                  c,cols*nra,mpi_real8, &
-                  0,mpi_comm_world,mpi_err)
+  ! blank 1: send the results back to the root process.
 
   ! Find out current time.
 
