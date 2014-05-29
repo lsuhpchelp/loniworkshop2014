@@ -57,6 +57,8 @@ int main(int argc, char* argv[])
     exit(2);
   }
 
+  // Set up a 2-D process grid.
+
   nprocr=nprocs/nprocc;
   myrowid=myid/nprocc;
   mycolid=myid-nprocc*myrowid;
@@ -159,33 +161,47 @@ int main(int argc, char* argv[])
       for (i=1;i<=nrl;i++)
 	srbuffer[i]=t[i][ncl];
 
+    // blank 1: fill in arguement #1 and #4 for all MPI sends and receives below:
+
     // Send U - Recv D:
 
     if (myrowid != nprocr-1)
-      MPI_Irecv(t[nrl+1],ncl+2,MPI_DOUBLE,myid+nprocc,tagu,MPI_COMM_WORLD,&reqid_ru);
+
+      MPI_Irecv( ,ncl+2,MPI_DOUBLE, ,tagu,MPI_COMM_WORLD,&reqid_ru);
+
     if (myrowid != 0)
-      MPI_Isend(t[1],ncl+2,MPI_DOUBLE,myid-nprocc,tagu,MPI_COMM_WORLD,&reqid_su);
+
+      MPI_Isend( ,ncl+2,MPI_DOUBLE, ,tagu,MPI_COMM_WORLD,&reqid_su);
 
     // Send D - Recv U:
 
     if (myrowid != 0)
-      MPI_Irecv(t[0],ncl+2,MPI_DOUBLE,myid-nprocc,tagd,MPI_COMM_WORLD,&reqid_rd);
+
+      MPI_Irecv( ,ncl+2,MPI_DOUBLE, ,tagd,MPI_COMM_WORLD,&reqid_rd);
+
     if (myrowid != nprocr-1)
-      MPI_Isend(t[nrl],ncl+2,MPI_DOUBLE,myid+nprocc,tagd,MPI_COMM_WORLD,&reqid_sd);
+
+      MPI_Isend( ,ncl+2,MPI_DOUBLE, ,tagd,MPI_COMM_WORLD,&reqid_sd);
 
     // Send R - Recv L:
 
     if (mycolid != 0)
-      MPI_Irecv(rlbuffer,nrl+2,MPI_DOUBLE,myid-1,tagr,MPI_COMM_WORLD,&reqid_rr);
+
+      MPI_Irecv( ,nrl+2,MPI_DOUBLE, ,tagr,MPI_COMM_WORLD,&reqid_rr);
+
     if (mycolid != nprocc-1)
-      MPI_Isend(srbuffer,nrl+2,MPI_DOUBLE,myid+1,tagr,MPI_COMM_WORLD,&reqid_sr);
+
+      MPI_Isend( ,nrl+2,MPI_DOUBLE, ,tagr,MPI_COMM_WORLD,&reqid_sr);
 
     // Send L - Recv R:
 
     if (mycolid != nprocc-1)
-      MPI_Irecv(rrbuffer,nrl+2,MPI_DOUBLE,myid+1,tagl,MPI_COMM_WORLD,&reqid_rl);
+
+      MPI_Irecv( ,nrl+2,MPI_DOUBLE, ,tagl,MPI_COMM_WORLD,&reqid_rl);
+
     if (mycolid != 0)
-      MPI_Isend(slbuffer,nrl+2,MPI_DOUBLE,myid-1,tagl,MPI_COMM_WORLD,&reqid_sl);
+
+      MPI_Isend( ,nrl+2,MPI_DOUBLE, ,tagl,MPI_COMM_WORLD,&reqid_sl);
 
     // Wait for the left and right sends and receives.
 

@@ -117,6 +117,8 @@ program laplace_main
         call exit(1)
      endif
 
+     ! Set up a 2-D process grid.
+
      nprocr=nprocs/nprocc
      myrowid=myid/nprocc
      mycolid=myid-nprocc*myrowid
@@ -212,7 +214,6 @@ subroutine laplace
   integer tagl,tagr,tagu,tagd
   integer reqid_rl,reqid_rr,reqid_ru,reqid_rd
   integer reqid_sl,reqid_sr,reqid_su,reqid_sd
-  integer mynbrl,mynbrr,mynbru,mynbrd
   integer status(mpi_status_size)
   integer rowtype
   
@@ -232,23 +233,8 @@ subroutine laplace
   call set_bcs( t )
   call set_bcs( told )
 
-  ! Decide the ID of neighbor processes in the process grid.
+  ! blank 1: Define a datatype to transfer row data
 
-  if (mycolid.ne.0) then
-     mynbrl=myid-1
-  endif
-  if (mycolid.ne.nprocc-1) then
-     mynbrr=myid+1
-  endif
-  if (myrowid.ne.0) then
-     mynbru=myid-nprocc
-  endif
-  if (myrowid.ne.nprocr-1) then
-     mynbrd=myid+nprocc
-  endif
-
-  ! Define a datatype to transfer row data
-  call mpi_type_vector(ncl,1,nrl+2,mpi_real8,rowtype,ierror)
   call mpi_type_commit(rowtype,ierror)
 
   ! Set some timing variables for total time and iteration time. 
@@ -266,44 +252,46 @@ subroutine laplace
      ! left first, then send left and receive from right. In both
      ! cases, we'll post the receives first, and then do the sends.
 
+     ! blank 2: fill in arguement #1 and #4 for the MPI sends and receives below:
+
      ! Send R - Recv L:
      
      if ( mycolid .ne. 0 ) then
-        call mpi_irecv( t(1,0), nrl, mpi_real8, myid - 1, tagr, mpi_comm_world, reqid_rl, ierror )
+        call mpi_irecv( , nrl, mpi_real8, , tagr, mpi_comm_world, reqid_rl, ierror )
      end if
 
      if ( mycolid .ne. nprocc-1 ) then
-        call mpi_send( t(1,ncl), nrl, mpi_real8, myid + 1, tagr, mpi_comm_world, reqid_sr,ierror )
+        call mpi_send( , nrl, mpi_real8, , tagr, mpi_comm_world, reqid_sr,ierror )
      end if
          
      ! Send L - Recv R:
 
      if ( mycolid .ne. nprocc-1 ) then
-        call mpi_irecv( t(1,ncl+1), nrl, mpi_real8, myid + 1, tagl, mpi_comm_world, reqid_rr, ierror )
+        call mpi_irecv( , nrl, mpi_real8, , tagl, mpi_comm_world, reqid_rr, ierror )
      end if
 
      if ( mycolid .ne. 0 ) then
-        call mpi_send( t(1,1), nrl, mpi_real8, myid - 1, tagl, mpi_comm_world, reqid_sl,ierror )
+        call mpi_send( , nrl, mpi_real8, , tagl, mpi_comm_world, reqid_sl,ierror )
      end if
 
      ! Send U - Recv D:
 
      if ( myrowid .ne. nprocr-1 ) then
-        call mpi_irecv( t(nrl+1,1), 1, rowtype, myid + nprocc, tagu, mpi_comm_world, reqid_rd, ierror )
+        call mpi_irecv( , 1, rowtype, , tagu, mpi_comm_world, reqid_rd, ierror )
      end if
 
      if ( myrowid .ne. 0 ) then
-        call mpi_send( t(1,1), 1, rowtype, myid - nprocc, tagu, mpi_comm_world, reqid_su,ierror )
+        call mpi_send( , 1, rowtype, , tagu, mpi_comm_world, reqid_su,ierror )
      end if
 
      ! Send D - Recv U:
 
      if ( myrowid .ne. 0 ) then
-        call mpi_irecv( t(0,1), 1, rowtype, myid - nprocc, tagd, mpi_comm_world, reqid_ru, ierror )
+        call mpi_irecv( , 1, rowtype, , tagd, mpi_comm_world, reqid_ru, ierror )
      end if
 
      if ( myrowid .ne. nprocr-1 ) then
-        call mpi_send( t(nrl,1), 1, rowtype, myid + nprocc, tagd, mpi_comm_world, reqid_sd, ierror )
+        call mpi_send( , 1, rowtype, , tagd, mpi_comm_world, reqid_sd, ierror )
      end if
 
      ! Send U - Recv D;
