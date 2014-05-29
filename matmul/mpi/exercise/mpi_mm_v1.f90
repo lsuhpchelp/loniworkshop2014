@@ -47,14 +47,11 @@ program ser_matmul
   real*8 :: start_time             ! Time variable.
   real*8 :: end_time               ! Time variable.
 
-  ! Initialize MPI environment.
+  ! blank 1: Initialize MPI environment.
 
-  call mpi_init(mpi_err)
 
-  ! Find out the total number of processes and the rank of current process.
+  ! blank 2: Find out the total number of processes and the rank of current process.
 
-  call mpi_comm_rank(mpi_comm_world, myrank, mpi_err)
-  call mpi_comm_size(mpi_comm_world, nprocs, mpi_err)
   
   ! Read and validate command line parameters.
 
@@ -137,7 +134,7 @@ program ser_matmul
   ! Decompose A in 1-D in a round-robin manner.
   ! Is there any other way of decomposition?
 
-  do i=myrank+1,nra,nprocs
+  do i= ! blank 3: fill in the indices for i
      do j=1,ncb
         do k=1,nca
            c(i,j)=c(i,j)+a(i,k)*b(k,j)
@@ -177,8 +174,8 @@ program ser_matmul
 
   ! Deallocate A, B and C.
   deallocate(a,b,c)
-  
-  call mpi_finalize(mpi_err)
+
+  ! blank 4: Finalize MPI
 
   stop
 

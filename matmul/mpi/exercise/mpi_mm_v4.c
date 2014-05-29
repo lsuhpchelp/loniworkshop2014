@@ -29,20 +29,32 @@ int main (int argc, char *argv[])
     real** b;
     real** c;
     real** cfull;
+
+    //Initialize MPI environment.
     
     MPI_Init(&argc,&argv);
+
+    //Find out the total number of processes and the rank of current process. 
+
     MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
     MPI_Comm_size(MPI_COMM_WORLD,&nprocs);
-   
+  
+    //Read and validate command line parameters.   
+ 
     printf("argc=%d\n",argc); 
     printf("myrank=%d\n",myrank); 
     if (6!=argc) {
+
+      //Incorrect number of arguments. Print the usage info. 
         if (0==myrank)
             printf("Usage: ser_mm nrows nprow npcol irow icol\n");
         MPI_Abort(MPI_COMM_WORLD, mpi_err);
         exit(1);
     }
     else {
+
+      //Process the arguments.
+
         nra=atoi(argv[1]);
         nprows=atoi(argv[2]);
         npcols=atoi(argv[3]);
@@ -51,8 +63,10 @@ int main (int argc, char *argv[])
         printf("%d,%d,%d,%d,%d\n",nra,nprows,npcols,ipeek,jpeek);
     }
     
+    //We only deal with square matrices in this exercise.
     nca=nra, ncb=nra;
     
+    // Perform some sanity checks.
     if (nprocs!=nprows*npcols){
         if (0!=myrank){
             printf("The nubmer of processes is not equal to nprows*npcols!\n");
@@ -74,15 +88,21 @@ int main (int argc, char *argv[])
         MPI_Abort(MPI_COMM_WORLD, mpi_err);
         exit(1);
     }
-//    
+
+    // Calculate the number of floating point operations needed for the matrix multiplication    
     flops = 2.0*nra*nca*ncb;
+
+    // Find out current time. 
     init_time = MPI_Wtime();
     
-    iprow= myrank/npcols;
-    ipcol= myrank%npcols;
-    
-    nsrow=nra/nprows;
-    nscol=ncb/npcols;
+    // blank 1: Find out the row and column indcies of the current process in the process grid.
+
+    iprow= ;
+    ipcol= ;
+
+    // blank 2: Calculate the dimensions of the sub-matrix.    
+    nsrow= ;
+    nscol= ;
 
     // allocate memory space for A, B and C
     a=malloc(nsrow*sizeof(real*));
@@ -120,23 +140,32 @@ int main (int argc, char *argv[])
     // find out current time
     start_time = MPI_Wtime();
     
+    // Matrix multiplication. 
+
     for (i=0;i<nsrow;i++)
         for (j=0;j<nscol;j++)
             for (k=0;k<nca;k++)
                 c[i][j] += a[i][k]*b[k][j];
 
-    MPI_Type_vector(nsrow,nscol,ncb,MPI_DOUBLE,&vtype);
+    //blank 3: Define a vector data type.
+
     MPI_Type_commit(&vtype);
     
+    // Send the results to the root process. 
+
     if (0==myrank){
         for (i=0;i<nsrow;i++)
             for (j=0;j<nscol;j++)
                 cfull[i][j]=c[i][j];
         for (i=1;i<=nprocs-1;i++)
-            ;//MPI_Recv(cfull(i/npcols*nsrow+1,(i%npcols)*nscol+1),1,vtype,i,1,mpi_comm_world,status);
+
+	  // blank 4: Receive from other processes.
+
     }
     else {
-        ;//MPI_Send(c,nsrow*nscol,MPI_DOUBLE,0,1,MPI_COMM_WORLD);
+
+      //blank 5: Send to the root process. 
+
     }
     
     MPI_Type_free(&vtype);

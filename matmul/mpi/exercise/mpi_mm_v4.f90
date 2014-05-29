@@ -141,17 +141,13 @@ program ser_matmul
   call date_and_time(VALUES=value)
   init_time = float(value(6)*60) + float(value(7)) + float(value(8))/1000d0
 
-  ! Find out the row and column indcies of the current process in the process grid.
-  ! It does not matter whether the index starts from 0 or 1 as long as the bookkeeping is tidy.
-  ! We choose 0 in this example.
+  ! blank 1: Find out the row and column indcies of the current process in the process grid.
+  iprow=
+  ipcol=
 
-  iprow=myrank/npcols
-  ipcol=mod(myrank,npcols)
-
-  ! Calculate the dimensions of the sub-matrix.
-
-  nsrow=nra/nprows
-  nscol=ncb/npcols
+  ! blank 2: Calculate the dimensions of the sub-matrix.
+  nsrow=
+  nscol=
 
   ! Allocate memory for sub-A, sub-B and sub-C.
 
@@ -194,9 +190,8 @@ program ser_matmul
      enddo
   enddo
 
-  ! Define a vector data type.
+  ! blank 3: Define a vector data type.
 
-  call mpi_type_vector(nscol,nsrow,nra,mpi_real8,vtype,mpi_err)
   call mpi_type_commit(vtype,mpi_err)
 
   ! Send the results to the root process.
@@ -206,14 +201,14 @@ program ser_matmul
      ! Move the local copy.
      cfull(1:nsrow,1:nscol)=c
 
-     ! Receive from other processes.
      do i=1,nprocs-1
-        call mpi_recv(cfull(i/npcols*nsrow+1,mod(i,npcols)*nscol+1),1,vtype,i,1,mpi_comm_world,status,mpi_err)
+     ! blank 4: Receive from other processes.
+
      enddo
 
   else
 
-     call mpi_send(c,nsrow*nscol,mpi_real8,0,1,mpi_comm_world,mpi_err)
+     ! blank 5: Send to the root process.
 
   endif
 

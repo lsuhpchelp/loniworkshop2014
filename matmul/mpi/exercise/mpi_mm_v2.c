@@ -94,9 +94,9 @@ int main (int argc, char *argv[])
     start_time = MPI_Wtime();
 
     rows=nra/nprocs;
-    ira_start=myrank*rows;
-    ira_end=(myrank+1)*rows-1;
-    
+
+    // blank 1: calculate the start and end indices for each process.    
+ 
     //printf("ira_start=%d,ira_end=%d\n",ira_start,ira_end);
     
     for (i=ira_start;i<=ira_end;i++)
@@ -108,11 +108,11 @@ int main (int argc, char *argv[])
     
     if (0==myrank) {
         for (i=1;i<=nprocs-1;i++) {
-	    MPI_Recv(c[i*rows],rows*nca,MPI_DOUBLE,i,1,MPI_COMM_WORLD,&status);
+    // blank 2: receive data from other processes.
         }
     }
     else {
-        MPI_Send(c[myrank*rows],rows*nca,MPI_DOUBLE,0,1,MPI_COMM_WORLD);
+    // blank 3: send data to the root process.
     }
     
     // find out current time
