@@ -136,9 +136,9 @@ int main(int argc, char** argv) {
 int matmul_acc(real **a, real **b, real **restrict c,int nra,int nca, int ncb){
     int i, j, k;
     real sum;
-#pragma acc data copyin(a[0:nra][0:nca],b[0:nca][0:ncb]) copy(c[0:nra][0:ncb])
-    {
-#pragma acc kernels
+//#pragma acc data copyin(a[0:nra][0:nca],b[0:nca][0:ncb]) copy(c[0:nra][0:ncb])
+//    {
+#pragma acc kernels copyin(a[0:nra][0:nca],b[0:nca][0:ncb]) copy(c[0:nra][0:ncb])
         for (i = 0; i < nra; i++){
             for (k = 0; k < ncb; k++){
                 sum = 0.0;
@@ -148,6 +148,6 @@ int matmul_acc(real **a, real **b, real **restrict c,int nra,int nca, int ncb){
                 c[i][k] = sum;
             }
         }
-    }
+//    }
 }
 

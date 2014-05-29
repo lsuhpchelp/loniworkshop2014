@@ -6,22 +6,23 @@
 typedef double real;
 
 int main() {
-    int i;
-    long n=1<<30;
-    //n=10000000000;
-    printf("n=%d\n",n);
+    long long i;
+    //long n=1<<30;
+    long long n=5000000000;
+    printf("n=%ld\n",n);
     real x, pi;
     real sum = 0.0;
     real step = 1.0/(real) n; 
 
     StartTimer();
-#pragma acc parallel loops private(i,x) reduction(+:sum)
+#pragma acc kernels
     for (i = 0; i < n; i++) {
         x = (i+0.5)*step;
         sum += 4.0/(1.0+x*x);
     }
     pi = step * sum;
     real runtime = GetTimer();
+    printf("pi acc = %17.15f\n",pi);
     printf(" total time: %f sec\n", runtime / 1000);
 
     // omp run
@@ -39,6 +40,7 @@ int main() {
     }
     pi = step * sum;
     runtime = GetTimer();
+    printf("pi omp = %17.15f\n",pi);
     printf(" total time: %f sec, using %d omp threads.\n", runtime / 1000, omp_threads);
 
     // serial run
