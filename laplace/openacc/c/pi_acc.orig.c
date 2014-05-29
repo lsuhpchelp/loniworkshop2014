@@ -12,6 +12,7 @@ int main(int argc, char** argv) {
 
     StartTimer();
 #pragma acc kernels 
+//#pragma acc parallel loop
     for (i = 0; i < n; i++) {
         x = (i+0.5)*step;
         sum +=  4.0/(1.0+x*x);
