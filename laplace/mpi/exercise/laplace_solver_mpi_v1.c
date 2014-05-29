@@ -111,18 +111,26 @@ int main(int argc, char* argv[])
     // Send U - Recv D:
 
     if (myid != nprocs-1)
-      MPI_Irecv(t[nrl+1],nc+2,MPI_DOUBLE,myid+1,tagu,MPI_COMM_WORLD,&reqidu);
+
+      // blank 1: receive from the neighbor blow.
+
     if (myid != 0)
-      MPI_Send(t[1],nc+2,MPI_DOUBLE,myid-1,tagu,MPI_COMM_WORLD);
+
+      // blank 2: send to above.
+
     if (myid != nprocs-1)
       MPI_Wait(&reqidu,&status);
 
     // Send D - Recv U:
 
     if (myid != 0)
-      MPI_Irecv(t[0],nc+2,MPI_DOUBLE,myid-1,tagd,MPI_COMM_WORLD,&reqidd);
+      
+      // blank 3: receive from above.
+
     if (myid != nprocs-1)
-      MPI_Send(t[nrl],nc+2,MPI_DOUBLE,myid+1,tagd,MPI_COMM_WORLD);
+
+      // blank 4: send to below.
+
     if (myid != 0)
       MPI_Wait(&reqidd,&status);
 
@@ -140,14 +148,16 @@ int main(int argc, char* argv[])
 
     if (myid == 0) {
       for(i=1;i<nprocs;i++) {
-	MPI_Recv(&dtg,1,MPI_DOUBLE,i,0,MPI_COMM_WORLD,&status);
+
+	// blank 5: the root process receives from other processes.
+
 	if (dtg > dt)
 	  dt=dtg;
       }
       dtg=dt;
     }
     else
-      MPI_Send(&dt,1,MPI_DOUBLE,0,0,MPI_COMM_WORLD);
+      // blank 6: send to the root process.
 
 
     // Send the global max convergence error to all processes.
