@@ -266,9 +266,8 @@ subroutine laplace
         end do
      end do
 
-     ! Find the global max convergence error.
+     ! blank 1: Find the global max convergence error with one MPI function call.
 
-     call mpi_allreduce( dt, dtg, 1, mpi_real8, mpi_max, mpi_comm_world, ierror)
 
      ! Check if output required.
 

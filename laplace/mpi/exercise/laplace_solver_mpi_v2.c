@@ -136,9 +136,9 @@ int main(int argc, char* argv[])
       }
     }
 
-    // Find the global max convergence error.    
+    // blank 1: Find the global max convergence error with one MPI function call.    
 
-    MPI_Allreduce(&dt,&dtg,1,MPI_DOUBLE,MPI_MAX,MPI_COMM_WORLD);
+
 
     // Check if output is required.
 
