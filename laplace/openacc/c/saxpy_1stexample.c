@@ -1,27 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <omp.h>
 #include "timer.h"
 
-void saxpy(int n, float a, float *x, float *restrict y);
+void saxpy(long n, float a, float *restrict x, float *restrict y);
 
 int main(int argc, char **argv) {
-    int n = 1<<20; // 1 million floats
+    //int n = 1<<20; // 1 million floats
+    long n = 500000000;
+    //long n = 5;
+    double start_time, end_time;
 
     if (argc > 1)
         n = atoi(argv[1]);
 
-    float *x = (float*)malloc(n * sizeof(float));
-    float *y = (float*)malloc(n * sizeof(float));
-
-    for (int i = 0; i < n; ++i) {
-        x[i] = 2.0f;
-        y[i] = 1.0f;
-    }
+    float *restrict x = (float*)malloc(n * sizeof(float));
+    float *restrict y = (float*)malloc(n * sizeof(float));
+    float a=3.0f;
 
     StartTimer();
-    saxpy(n, 3.0f, x, y);
-    float runtime= GetTimer();
+    //#pragma acc data create(x[0:n]) copyout(y[0:n])
+    //#pragma acc data create(x[0:n],y[0:n])
+    //   {
+#pragma acc kernels //create(x[0:n]) copyout(y[0:n])
+    {
+        for (int i = 0; i < n; ++i) {
+            x[i] = 2.0f;
+            y[i] = 1.0f;
+        }
+
+        for (int i = 0; i < n; ++i)
+            y[i] = a * x[i] + y[i];
+        //saxpy(n, 3.0f, x, y);
+    }
+    //    }
+    //    float runtime= GetTimer();
+    //    printf(" total function time: %f sec\n", runtime/1000);
+
+    //    start_time = omp_get_wtime();
+    //    saxpy( n, 2.0, x, y);
+    double runtime = GetTimer();
     printf(" total function time: %f sec\n", runtime/1000);
+    printf("y[0]=%f\n",y[0]);
 
     free(x);
     free(y);
@@ -29,9 +49,9 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void saxpy(int n, float a, float *restrict x, float *restrict y) {
-#pragma acc parallel loop
-    for (int i = 0; i < n; ++i)
+void saxpy(long n, float a, float *restrict x, float *restrict y) {
+    //#pragma acc kernels
+    for (long i = 0; i < n; ++i)
         y[i] = a * x[i] + y[i];
 }
 

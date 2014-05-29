@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #PBS -q workq
 #PBS -l nodes=1:ppn=16
 #PBS -l walltime=01:00:00
@@ -8,10 +8,12 @@
 #PBS -N acc_test
 
 cd $PBS_O_WORKDIR
+export OMP_NUM_THREADS=16
+export PGI_ACC_TIME=1
 #./lapacc.out 4096 4096 1000 100 0.001
 #./laps.out 200 200 100 1 0.001
 #./cudas.out
-#./mmacc.out 8000 8000 8000 1 0.001
-#./piacc.out
-export PGI_ACC_TIME=1
-./bm_laplace.sh
+#./mmacc.out 4096 4096 4096 1 0.001
+./piacc.out
+./a.out
+#./bm_laplace.sh
