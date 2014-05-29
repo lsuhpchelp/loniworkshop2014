@@ -104,6 +104,9 @@ program laplace_main
         niter = maxiter
      end if
 
+     ! Check if the total number of columns is a multiple of the nubmer of
+     ! processes.
+
      if (mod(nc,nprocs).ne.0) then
         if (myid.eq.0) then 
            write(*,*) "Error: the number of columns is not multiple of the number of processes!"
