@@ -12,11 +12,10 @@ int main(int argc, char* argv[])
   int nprocs, myid;
   int nrl;  
 
-  // Initialize MPI.
+  // blank 1: Initialize MPI.
 
-  MPI_Init(&argc,&argv);
-  MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myid);
+  // blank 2: find the number of processes and the rank
+
 
   printf("This is process %d out of %d processes.\n",myid,nprocs);
 
@@ -54,8 +53,9 @@ int main(int argc, char* argv[])
     exit(2);
   }
 
-  nrl=nr/nprocs;
-  printf("Process %d has row %d through %d\n",myid,myid*nrl+1,(myid+1)*nrl);
+  //blank 3: calculate the number of rows per process and print the
+  //row range for each process
+
 
   double **t;
   t=malloc((nr+2)*sizeof(double *));
@@ -124,7 +124,8 @@ int main(int argc, char* argv[])
   double time2=MPI_Wtime();
   printf("\nTotal Time (sec): %f.\n",time2-time1);
 
-  MPI_Finalize();
+  // blank 4: finalize MPI.
+
   
   return 0;
 
