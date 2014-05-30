@@ -204,7 +204,7 @@ subroutine laplace
   call set_bcs( t )
   call set_bcs( told )
 
-  ! Set some timing variables for total time and iteration time. 
+  ! Main loop.
 
   do iter = 1, niter
 
@@ -222,14 +222,18 @@ subroutine laplace
      ! Send R - Recv L:
      
      if ( myid .ne. 0 ) then
-        call mpi_irecv( t(1,0), nr, mpi_real8, myid - 1, tagr, mpi_comm_world, reqidr, ierror )
+
+        ! blank 1: receive from the neighbor on the left.
+
         if ( ierror .ne. 0 ) then
            write( *, * ) myid, iter, '- ERROR:', ierror
         end if
      end if
 
      if ( myid .lt. nprocs-1 ) then
-        call mpi_send( t(1,ncl), nr, mpi_real8, myid + 1, tagr, mpi_comm_world, ierror )
+        
+        ! blank 2: send to the neighbor on the right.
+
      end if
          
      if ( myid .ne. 0 ) then
@@ -240,15 +244,17 @@ subroutine laplace
 
      if ( myid .ne. nprocs-1 ) then
 
-        call mpi_irecv( t(1,ncl+1), nr, mpi_real8, myid + 1, tagl, mpi_comm_world, reqidl, ierror )
+        ! blank 3: receive from the neighbor on the right.
+
         if ( ierror .ne. 0 ) then
            write( *, * ) myid, iter, '- ERROR:', ierror
         end if
      end if
 
      if ( myid .ne. 0 ) then
-!           Send data to the left
-        call mpi_send( t(1,1), nr, mpi_real8, myid - 1, tagl, mpi_comm_world, ierror )
+        
+        ! blank 4: send to the neighbor on the left.
+
      end if
          
      if ( myid .ne. nprocs-1 ) then 
@@ -270,12 +276,16 @@ subroutine laplace
 
      if (myid.eq.0) then
         do i=1,nprocs-1
-           call mpi_recv(dta(i) , 1, mpi_real8, i, tagl, mpi_comm_world, status, ierror )
+
+           ! blank 5: receive from other processes.
+
         enddo
         dta(0)=dt
         dtg=maxval(dta)
      else
-        call mpi_send( dt, 1, mpi_real8, 0, tagl, mpi_comm_world, ierror )
+
+        ! blank 6: send to the root process.
+
      endif
 
      ! Send the global max convergence error to all processes.

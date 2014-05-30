@@ -212,7 +212,6 @@ subroutine laplace
   integer tagl,tagr,tagu,tagd
   integer reqid_rl,reqid_rr,reqid_ru,reqid_rd
   integer reqid_sl,reqid_sr,reqid_su,reqid_sd
-  integer mynbrl,mynbrr,mynbru,mynbrd
   integer status(mpi_status_size)
   integer rowtype
   
@@ -231,21 +230,6 @@ subroutine laplace
   call initialize( told )
   call set_bcs( t )
   call set_bcs( told )
-
-  ! Decide the ID of neighbor processes in the process grid.
-
-  if (mycolid.ne.0) then
-     mynbrl=myid-1
-  endif
-  if (mycolid.ne.nprocc-1) then
-     mynbrr=myid+1
-  endif
-  if (myrowid.ne.0) then
-     mynbru=myid-nprocc
-  endif
-  if (myrowid.ne.nprocr-1) then
-     mynbrd=myid+nprocc
-  endif
 
   ! Define a datatype to transfer row data
   call mpi_type_vector(ncl,1,nrl+2,mpi_real8,rowtype,ierror)
