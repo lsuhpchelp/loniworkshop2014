@@ -5,7 +5,7 @@
 int main(int argc, char** argv)
 {
     float *restrict a, *b, *c;
-    int i,n=100000000;
+    long long int i,n=1000000;
     a = (float*)malloc(n*sizeof(float));
     b = (float*)malloc(n*sizeof(float));
     c = (float*)malloc(n*sizeof(float));
@@ -14,14 +14,20 @@ int main(int argc, char** argv)
         a[i]=1.0,b[i]=2.0,c[i]=3.0;
 
     StartTimer();
-#pragma acc parallel loop//kernels //create(a[0:n],b[0:n],c[0:n])//loop independent
-    for( i = 0; i < n; ++i )
-        a[i] = b[i] + c[i];
+#pragma acc parallel //create(a[0:n], b[0:n], c[0:n])
+    {
+    #pragma acc loop
+        for( i = 0; i < n; ++i )
+            a[i]=1.0,b[i]=2.0,c[i]=3.0;
+    #pragma acc loop
+        for( i = 0; i < n; ++i )
+            a[i] = b[i] + c[i];
+    }
     double t = GetTimer();
     printf("line %d = %f\n",__LINE__, t/1000);
 
     StartTimer();
-//#pragma acc kernels //loop independent
+    //#pragma acc kernels //loop independent
     for( i = 0; i < n; ++i )
         a[i] = b[i] + c[i];
     t = GetTimer();
