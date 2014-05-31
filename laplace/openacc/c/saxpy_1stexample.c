@@ -19,10 +19,7 @@ int main(int argc, char **argv) {
     float a=3.0f;
 
     StartTimer();
-    //#pragma acc data create(x[0:n]) copyout(y[0:n])
-    //#pragma acc data create(x[0:n],y[0:n])
-    //   {
-#pragma acc kernels //create(x[0:n]) copyout(y[0:n])
+#pragma acc kernels create(x[0:n]) copyout(y[0:n])
     {
         for (int i = 0; i < n; ++i) {
             x[i] = 2.0f;
@@ -33,12 +30,6 @@ int main(int argc, char **argv) {
             y[i] = a * x[i] + y[i];
         //saxpy(n, 3.0f, x, y);
     }
-    //    }
-    //    float runtime= GetTimer();
-    //    printf(" total function time: %f sec\n", runtime/1000);
-
-    //    start_time = omp_get_wtime();
-    //    saxpy( n, 2.0, x, y);
     double runtime = GetTimer();
     printf(" total function time: %f sec\n", runtime/1000);
     printf("y[0]=%f\n",y[0]);

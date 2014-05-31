@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
     printf("step = %17.15f\n",step);
 
     StartTimer();
-#pragma acc kernels 
+#pragma acc kernels loop
     for (i = 0; i < n; i++) {
         x = (i+0.5)*step;
         sum +=  4.0/(1.0+x*x);
