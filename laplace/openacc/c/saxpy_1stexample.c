@@ -6,7 +6,7 @@
 void saxpy(long n, float a, float *x, float *restrict y, float xval, float yval);
 
 int main(int argc, char **argv) {
-    long n = 100000000;
+    long n = 500000000;
     double start_time, end_time;
 
     if (argc > 1)
@@ -22,8 +22,11 @@ int main(int argc, char **argv) {
         y[i] = 1.0f;
     }
 
+    start_time = omp_get_wtime();
     for (int i = 0; i < n; ++i)
         y[i] = a * x[i] + y[i];
+    end_time = omp_get_wtime();
+    printf ("SAXPY omp serial Time: %f\n", end_time - start_time);
     double runtime = GetTimer();
     printf(" total serial time: %f sec\n", runtime/1000);
 
@@ -42,13 +45,19 @@ int main(int argc, char **argv) {
 void saxpy(long n, float a, float *x, float *restrict y, float xval, float yval) {
 #pragma acc create(x[0:n],y[0:n])
     {
+        double start_time, end_time;
+        start_time = omp_get_wtime();
 #pragma acc kernels loop
         for (int i = 0; i < n; ++i) {
             x[i] = xval;
             y[i] = yval;
         }
+        double runtime = GetTimer();
 #pragma acc kernels loop
         for (int i = 0; i < n; ++i)
             y[i] = a * x[i] + y[i];
+        end_time = omp_get_wtime();
+        printf ("SAXPY omp Time: %f\n", end_time - start_time);
+        printf(" total saxpy time: %f sec\n", runtime/1000);
     }
 }
