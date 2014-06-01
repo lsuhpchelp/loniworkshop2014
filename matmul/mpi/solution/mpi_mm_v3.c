@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 typedef double real;
-#define N 100
 
 int main (int argc, char *argv[])
 {
@@ -24,16 +23,6 @@ int main (int argc, char *argv[])
     
     MPI_Status status;
 
-    // real** a;
-    // real** b;
-    // real** c;
-    
-    real a[N][N];
-    real b[N][N];
-    real c[N][N];
-    
-
-    
     MPI_Init(&argc,&argv);
     MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
     MPI_Comm_size(MPI_COMM_WORLD,&nprocs);
@@ -50,8 +39,6 @@ int main (int argc, char *argv[])
         jpeek=atoi(argv[3]);
     }
     
-    nra=N;
-    
     nca=nra, ncb=nra;
     if (0!=(nra % nprocs)) {
         if (0==myrank)
@@ -59,7 +46,11 @@ int main (int argc, char *argv[])
         MPI_Abort(MPI_COMM_WORLD, mpi_err);
         exit(1);
     }
-//    
+    
+    real a[nra][nca];
+    real b[nca][ncb];
+    real c[nra][ncb];
+
     flops = 2.0*nra*nca*ncb;
     init_time = MPI_Wtime();
 

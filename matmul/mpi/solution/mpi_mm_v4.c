@@ -34,8 +34,6 @@ int main (int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
     MPI_Comm_size(MPI_COMM_WORLD,&nprocs);
    
-    printf("argc=%d\n",argc); 
-    printf("myrank=%d\n",myrank); 
     if (6!=argc) {
         if (0==myrank)
             printf("Usage: ser_mm nrows nprow npcol irow icol\n");
@@ -48,7 +46,6 @@ int main (int argc, char *argv[])
         npcols=atoi(argv[3]);
         ipeek=atoi(argv[4]);
         jpeek=atoi(argv[5]);
-        printf("%d,%d,%d,%d,%d\n",nra,nprows,npcols,ipeek,jpeek);
     }
     
     nca=nra, ncb=nra;
