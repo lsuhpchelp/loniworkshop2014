@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 typedef double real;
-#define N 100
 
 int main (int argc, char *argv[])
 {
@@ -24,16 +23,6 @@ int main (int argc, char *argv[])
     
     MPI_Status status;
 
-    // real** a;
-    // real** b;
-    // real** c;
-    
-    real a[N][N];
-    real b[N][N];
-    real c[N][N];
-    
-
-    
     MPI_Init(&argc,&argv);
     MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
     MPI_Comm_size(MPI_COMM_WORLD,&nprocs);
@@ -50,8 +39,6 @@ int main (int argc, char *argv[])
         jpeek=atoi(argv[3]);
     }
     
-    nra=N;
-    
     nca=nra, ncb=nra;
     if (0!=(nra % nprocs)) {
         if (0==myrank)
@@ -59,24 +46,14 @@ int main (int argc, char *argv[])
         MPI_Abort(MPI_COMM_WORLD, mpi_err);
         exit(1);
     }
-//    
+    
+    real a[nra][nca];
+    real b[nca][ncb];
+    real c[nra][ncb];
+
     flops = 2.0*nra*nca*ncb;
     init_time = MPI_Wtime();
 
-    // allocate memory space for A, B and C
-    // a=malloc(nra*sizeof(real*));
-    // for (i=0;i<nra;i++){
-        // a[i]=malloc(nca*sizeof(real));
-    // }
-    // b=malloc(nca*sizeof(real*));
-    // for (i=0;i<nca;i++){
-        // b[i]=malloc(ncb*sizeof(real));
-    // }
-    // c=malloc(nra*sizeof(real*));
-    // for (i=0;i<nra;i++){
-        // c[i]=malloc(ncb*sizeof(real));
-    // }
-    
     // initialize the values
     for (i=0;i<nra;i++)
         for (j=0;j<nca;j++)
@@ -133,19 +110,5 @@ int main (int argc, char *argv[])
                                + (float)(jpeek)*(float)(nra)*((float)(nra)-1.0)*(2.0*(float)(nra)-1.0)/6.0);
     }
     
-    // free A-C
-    // for (i=0;i<nra;i++){
-        // free(a[i]);
-    // }
-    // free(a);
-    // for (i=0;i<nca;i++){
-        // free(b[i]);
-    // }
-    // free(b);
-    // for (i=0;i<nra;i++){
-        // free(c[i]);
-    // }
-    // free(c);
-
     MPI_Finalize(); 
 }
