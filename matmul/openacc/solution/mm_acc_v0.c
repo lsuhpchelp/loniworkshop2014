@@ -2,15 +2,14 @@
 #include <stdlib.h>
 #include <math.h>
 #include <omp.h>
-#include "dynamic_2d_array.h"             
-#include "timer.h"
+
+typedef double real;
 
 const int nra=2048;
 const int nca=2048;
 const int ncb=2048;
 
 int main(int argc, char** argv) {
-
 
     int check=1;
     real eps=0.001;
