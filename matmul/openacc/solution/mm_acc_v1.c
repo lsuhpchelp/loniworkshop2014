@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
     real **a, **b, **c;
     real **cs, **comp;
     real sum;
-    real start_time, end_time;
+    real start_time, end_time, elapse_time;
 
     // FIXME: allocate the memory spaces from here:
     a=allocate_dynamic_2d_array(nra, nca);
@@ -58,7 +58,10 @@ int main(int argc, char** argv) {
     start_time = omp_get_wtime();
     matmul_acc(a, b, c, nra, nca, ncb);
     end_time = omp_get_wtime();
-    printf (" total acc time: %f sec\n", end_time - start_time);
+    elapse_time = end_time - start_time;
+    printf(" total acc time: %f sec\n", elapse_time);
+    real gflops = 2.0*nra*nca*ncb/elapse_time*1.0e-9;
+    printf (" Gflops: %f \n", gflops);
 
     // OpenMP versions
     int omp_threads=omp_get_num_procs();
