@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     // Get some timing information.
     int i,j,k;
     real a[nra][nca], b[nca][ncb], c[nra][ncb];
-    real cs[nra][ncb], comp[nra][ncb];
+    real cs[nra][ncb];
     real sum;
 
     for (i = 0; i < nra; i++){
@@ -43,16 +43,16 @@ int main(int argc, char** argv) {
     }
 
     // get the time info for the acc version
-    // StartTimer();
     start_time = omp_get_wtime();
+    // FIXME: add the directives to the code segment below
 #pragma acc data copyin(a,b) copyout(c)
-#pragma acc parallel loop
-    //#pragma acc kernels
+#pragma acc kernels
+    //#pragma acc parallel loop
     for (i = 0; i < nra; i++){
-#pragma acc loop
+        //#pragma acc loop
         for (k = 0; k < ncb; k++){
             sum=0.0;
-#pragma acc loop seq
+            //#pragma acc loop seq
             {
                 for (j = 0; j < nca; j++){
                     sum += a[i][j] * b[j][k];
@@ -61,14 +61,11 @@ int main(int argc, char** argv) {
             }
         }
     }
-    //real runtime = GetTimer();
-    //printf(" total acc time: %f sec\n", runtime / 1000);
     end_time = omp_get_wtime();
     printf (" total acc time: %f sec\n", end_time - start_time);
 
     // check if the acc version matches the serial version
     if (check) {
-        // StartTimer();
         start_time = omp_get_wtime();
         for (i = 0; i < nra; i++){
             for (k = 0; k < ncb; k++){
@@ -79,9 +76,6 @@ int main(int argc, char** argv) {
                 cs[i][k] = sum;
             }
         }
-
-        //runtime = GetTimer();
-        //printf(" total serial time: %f sec\n", runtime / 1000);
         end_time = omp_get_wtime();
         printf (" total serial time: %f sec\n", end_time - start_time);
 
