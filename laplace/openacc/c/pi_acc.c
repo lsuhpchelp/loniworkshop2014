@@ -8,7 +8,7 @@ typedef double real;
 int main() {
     long long i;
     //long n=1<<30;
-    long long n=5000000000;
+    long long n=10000000000;
     printf("n=%ld\n",n);
     real x, pi;
     real sum = 0.0;

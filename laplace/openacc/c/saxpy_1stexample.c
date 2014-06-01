@@ -3,43 +3,36 @@
 #include <omp.h>
 #include "timer.h"
 
-void saxpy(long n, float a, float *restrict x, float *restrict y);
+void saxpy(long n, float a, float *x, float *restrict y, float xval, float yval);
 
 int main(int argc, char **argv) {
-    //int n = 1<<20; // 1 million floats
     long n = 500000000;
-    //long n = 5;
     double start_time, end_time;
 
     if (argc > 1)
         n = atoi(argv[1]);
 
-    float *restrict x = (float*)malloc(n * sizeof(float));
-    float *restrict y = (float*)malloc(n * sizeof(float));
+    float *x = (float*)malloc(n * sizeof(float));
+    float *y = (float*)malloc(n * sizeof(float));
     float a=3.0f;
 
     StartTimer();
-    //#pragma acc data create(x[0:n]) copyout(y[0:n])
-    //#pragma acc data create(x[0:n],y[0:n])
-    //   {
-#pragma acc kernels //create(x[0:n]) copyout(y[0:n])
-    {
-        for (int i = 0; i < n; ++i) {
-            x[i] = 2.0f;
-            y[i] = 1.0f;
-        }
-
-        for (int i = 0; i < n; ++i)
-            y[i] = a * x[i] + y[i];
-        //saxpy(n, 3.0f, x, y);
+    for (int i = 0; i < n; ++i) {
+        x[i] = 2.0f;
+        y[i] = 1.0f;
     }
-    //    }
-    //    float runtime= GetTimer();
-    //    printf(" total function time: %f sec\n", runtime/1000);
 
-    //    start_time = omp_get_wtime();
-    //    saxpy( n, 2.0, x, y);
+    start_time = omp_get_wtime();
+    for (int i = 0; i < n; ++i)
+        y[i] = a * x[i] + y[i];
+    end_time = omp_get_wtime();
+    printf ("SAXPY omp serial Time: %f\n", end_time - start_time);
     double runtime = GetTimer();
+    printf(" total serial time: %f sec\n", runtime/1000);
+
+    StartTimer();
+    saxpy(n, 3.0f, x, y, 2.0f, 1.0f);
+    runtime = GetTimer();
     printf(" total function time: %f sec\n", runtime/1000);
     printf("y[0]=%f\n",y[0]);
 
@@ -49,9 +42,22 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void saxpy(long n, float a, float *restrict x, float *restrict y) {
-    //#pragma acc kernels
-    for (long i = 0; i < n; ++i)
-        y[i] = a * x[i] + y[i];
+void saxpy(long n, float a, float *x, float *restrict y, float xval, float yval) {
+#pragma acc create(x[0:n],y[0:n])
+    {
+        double start_time, end_time;
+        start_time = omp_get_wtime();
+#pragma acc kernels loop
+        for (int i = 0; i < n; ++i) {
+            x[i] = xval;
+            y[i] = yval;
+        }
+        double runtime = GetTimer();
+#pragma acc kernels loop
+        for (int i = 0; i < n; ++i)
+            y[i] = a * x[i] + y[i];
+        end_time = omp_get_wtime();
+        printf ("SAXPY omp Time: %f\n", end_time - start_time);
+        printf(" total saxpy time: %f sec\n", runtime/1000);
+    }
 }
-
