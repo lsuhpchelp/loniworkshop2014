@@ -314,7 +314,7 @@ subroutine laplace
      dt = 0.
 
      do j = 1, ncl
-        do i = 1, nr
+        do i = 1, nrl
            dt = max( dabs(t(i,j) - told(i,j)), dt )
            told(i,j) = t(i,j)
         end do
