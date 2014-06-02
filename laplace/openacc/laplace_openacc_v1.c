@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "timer.h"
+#include <omp.h>
 #include "dynamic_2d_array.h"
 
 #define MAXITER 1000000
@@ -25,9 +25,10 @@ int main(int argc, char* argv[])
 
     int i,j,iter;
     real dt;
+    real start_time, end_time;
 
     // Get some timing information.
-    StartTimer();
+    start_time = omp_get_wtime();
 
     int nr2 = nr+2;
     int nc2 = nc+2;
@@ -39,6 +40,7 @@ int main(int argc, char* argv[])
     // Avoid using memset as this might cause undefined behavior,
     // If you have to use it, shoud be:
     // memset(t[0], 0, nr2 * nc2 * sizeof(real));
+    // memset(told[0], 0, nr2 * nc2 * sizeof(real));
     for (i=0;i<nr2;i++)
         for (j=0;j<nc2;j++) {
             t[i][j]=0.0;
@@ -91,8 +93,8 @@ int main(int argc, char* argv[])
     free_dynamic_2d_array(told);
 
     // Print out the execution time.
-    real runtime = GetTimer();
-    printf(" total time: %f sec\n", runtime / 1000);
+    end_time = omp_get_wtime();
+    printf ("total time in sec: %f\n", end_time - start_time);
 
     return 0;
 

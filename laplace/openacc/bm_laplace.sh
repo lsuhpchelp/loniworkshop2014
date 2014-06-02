@@ -1,3 +1,4 @@
+# benchmark the openacc version of the jacobi iteration
 #!/bin/bash -x
 pgcc -fast laplace_openacc_v0.c
 ./a.out
