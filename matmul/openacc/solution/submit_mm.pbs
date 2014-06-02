@@ -1,0 +1,16 @@
+#!/bin/bash -x
+#PBS -q workq
+#PBS -A hpc_train_2014
+#PBS -l nodes=1:ppn=16
+#PBS -l walltime=01:00:00
+#PBS -o output_s
+#-e eg
+#PBS -j oe
+#PBS -N mm_acc
+
+export PGI_ACC_TIME=1
+export OMP_NUM_THREADS=16
+./mmaccv0c.out
+# ./mmaccv1.out nra nca ncb check eps
+./mmaccv1f.out 2048 2048 2048 1 0.001
+./mmaccv0f.out
