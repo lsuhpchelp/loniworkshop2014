@@ -14,8 +14,9 @@ int main(int argc, char** argv) {
     int check=1;
     real eps=0.001;
 
-    real start_time, end_time;
+    real start_time, end_time, elapse_time;
 
+    // Get some timing information.
     int i,j,k;
     real a[nra][nca], b[nca][ncb], c[nra][ncb];
     real cs[nra][ncb];
@@ -55,7 +56,11 @@ int main(int argc, char** argv) {
         }
     }
     end_time = omp_get_wtime();
-    printf (" total acc time: %f sec\n", end_time - start_time);
+    elapse_time = end_time - start_time;
+    printf(" total acc time: %f sec\n", elapse_time);
+    real gflops = 2.0*nra*nca*ncb/elapse_time*1.0e-9;
+    printf (" Gflops: %f \n", gflops);
+
 
     // check if the acc version matches the serial version
     if (check) {
@@ -86,9 +91,9 @@ int main(int argc, char** argv) {
             }
         }
         if (err) 
-            printf("acc and serial do not match!\n");
+            printf("acc and serial does not match!\n");
         else
-            printf("acc and serial match!\n");
+            printf("acc and serial matches!\n");
     }        
 
 }
