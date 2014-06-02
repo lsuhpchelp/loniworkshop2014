@@ -1,0 +1,30 @@
+#!/bin/bash -x
+#PBS -q workq
+#PBS -l nodes=1:ppn=16
+#PBS -l walltime=01:00:00
+#PBS -o og
+#-e eg
+#PBS -j oe
+#PBS -N acc_laplace_test
+
+cd $PBS_O_WORKDIR
+export PGI_ACC_TIME=1
+# start the benchmark
+pgcc -fast laplace_openacc_v0.c
+./a.out
+pgcc -fast -mp laplace_openacc_v0.c
+export OMP_NUM_THREADS=1
+./a.out
+export OMP_NUM_THREADS=2
+./a.out
+export OMP_NUM_THREADS=4
+./a.out
+export OMP_NUM_THREADS=8
+./a.out
+export OMP_NUM_THREADS=16
+./a.out
+export PGI_ACC_TIME=1
+pgcc -fast -acc -Minfo=accel -ta=nvidia,time laplace_openacc_v0.c
+./a.out
+pgcc -fast -acc -Minfo=accel -ta=nvidia,time laplace_openacc_v0_dataregion.c
+./a.out

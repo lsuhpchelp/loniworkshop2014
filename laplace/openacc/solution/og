@@ -1,0 +1,257 @@
+--------------------------------------
+Running PBS prologue script
+--------------------------------------
+User and Job Data:
+--------------------------------------
+Job ID:    4187.shelob1
+Username:  fchen14
+Group:     Admins
+Date:      02-Jun-2014 14:44
+Node:      shelob024 (8274)
+--------------------------------------
+PBS has allocated the following nodes:
+
+shelob024
+
+A total of 16 processors on 1 nodes allocated
+---------------------------------------------
+Check nodes and clean them of stray processes
+---------------------------------------------
+Checking node shelob024 14:44:03 
+Done clearing all the allocated nodes
+------------------------------------------------------
+Concluding PBS prologue script - 02-Jun-2014 14:44:03
+------------------------------------------------------
++ cd /home/fchen14/loniworkshop2014/laplace/openacc
++ export PGI_ACC_TIME=1
++ PGI_ACC_TIME=1
++ pgcc -fast laplace_openacc_v0.c
++ ./a.out
+Jacobi relaxation Calculation: 4096 x 4096 mesh
+    0, 0.250000
+  100, 0.002397
+  200, 0.001204
+  300, 0.000804
+  400, 0.000603
+  500, 0.000483
+  600, 0.000403
+  700, 0.000345
+  800, 0.000302
+  900, 0.000269
+total time in sec: 43.592252
++ pgcc -fast -mp laplace_openacc_v0.c
++ export OMP_NUM_THREADS=1
++ OMP_NUM_THREADS=1
++ ./a.out
+Jacobi relaxation Calculation: 4096 x 4096 mesh
+    0, 0.250000
+  100, 0.002397
+  200, 0.001204
+  300, 0.000804
+  400, 0.000603
+  500, 0.000483
+  600, 0.000403
+  700, 0.000345
+  800, 0.000302
+  900, 0.000269
+total time in sec: 49.097369
++ export OMP_NUM_THREADS=2
++ OMP_NUM_THREADS=2
++ ./a.out
+Jacobi relaxation Calculation: 4096 x 4096 mesh
+    0, 0.250000
+  100, 0.002397
+  200, 0.001204
+  300, 0.000804
+  400, 0.000603
+  500, 0.000483
+  600, 0.000403
+  700, 0.000345
+  800, 0.000302
+  900, 0.000269
+total time in sec: 32.554336
++ export OMP_NUM_THREADS=4
++ OMP_NUM_THREADS=4
++ ./a.out
+Jacobi relaxation Calculation: 4096 x 4096 mesh
+    0, 0.250000
+  100, 0.002397
+  200, 0.001204
+  300, 0.000804
+  400, 0.000603
+  500, 0.000483
+  600, 0.000403
+  700, 0.000345
+  800, 0.000302
+  900, 0.000269
+total time in sec: 24.855987
++ export OMP_NUM_THREADS=8
++ OMP_NUM_THREADS=8
++ ./a.out
+Jacobi relaxation Calculation: 4096 x 4096 mesh
+    0, 0.250000
+  100, 0.002397
+  200, 0.001204
+  300, 0.000804
+  400, 0.000603
+  500, 0.000483
+  600, 0.000403
+  700, 0.000345
+  800, 0.000302
+  900, 0.000269
+total time in sec: 26.302223
++ export OMP_NUM_THREADS=16
++ OMP_NUM_THREADS=16
++ ./a.out
+Jacobi relaxation Calculation: 4096 x 4096 mesh
+    0, 0.250000
+  100, 0.002397
+  200, 0.001204
+  300, 0.000804
+  400, 0.000603
+  500, 0.000483
+  600, 0.000403
+  700, 0.000345
+  800, 0.000302
+  900, 0.000269
+total time in sec: 26.986655
++ export PGI_ACC_TIME=1
++ PGI_ACC_TIME=1
++ pgcc -fast -acc -Minfo=accel -ta=nvidia,time laplace_openacc_v0.c
+main:
+     48, Generating present_or_copyin(Anew[1:4094][1:4094])
+         Generating present_or_copyin(A[:4096][:4096])
+         Generating NVIDIA code
+     49, Loop is parallelizable
+     51, Loop is parallelizable
+         Accelerator kernel generated
+         49, #pragma acc loop gang /* blockIdx.y */
+         51, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+         54, Max reduction generated for error
+     59, Generating present_or_copyin(Anew[1:4094][1:4094])
+         Generating present_or_copyin(A[1:4094][1:4094])
+         Generating NVIDIA code
+     60, Loop is parallelizable
+     62, Loop is parallelizable
+         Accelerator kernel generated
+         60, #pragma acc loop gang /* blockIdx.y */
+         62, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
++ ./a.out
+WARNING: Deprecated config file /etc/modprobe.conf, all config files belong into /etc/modprobe.d/.
+
+Accelerator Kernel Timing data
+/home/fchen14/loniworkshop2014/laplace/openacc/laplace_openacc_v0.c
+  main  NVIDIA  devicenum=0
+    time(us): 95,153,357
+    48: data region reached 1000 times
+        48: data copyin reached 8000 times
+             device time(us): total=22,294,420 max=2,894 min=2,742 avg=2,786
+        59: data copyout reached 8000 times
+             device time(us): total=22,793,220 max=45,748 min=2,503 avg=2,849
+    48: compute region reached 1000 times
+        51: kernel launched 1000 times
+            grid: [32x4094]  block: [128]
+             device time(us): total=2,923,988 max=3,142 min=2,918 avg=2,923
+            elapsed time(us): total=2,935,637 max=3,161 min=2,930 avg=2,935
+        51: reduction kernel launched 1000 times
+            grid: [1]  block: [256]
+             device time(us): total=268,277 max=355 min=266 avg=268
+            elapsed time(us): total=279,353 max=365 min=276 avg=279
+    59: data region reached 1000 times
+        59: data copyin reached 8000 times
+             device time(us): total=21,965,506 max=2,823 min=2,733 avg=2,745
+        67: data copyout reached 8000 times
+             device time(us): total=23,406,504 max=45,871 min=2,503 avg=2,925
+    59: compute region reached 1000 times
+        62: kernel launched 1000 times
+            grid: [32x4094]  block: [128]
+             device time(us): total=1,501,442 max=1,582 min=1,495 avg=1,501
+            elapsed time(us): total=1,513,829 max=1,594 min=1,506 avg=1,513
+Jacobi relaxation Calculation: 4096 x 4096 mesh
+    0, 0.250000
+  100, 0.002397
+  200, 0.001204
+  300, 0.000804
+  400, 0.000603
+  500, 0.000483
+  600, 0.000403
+  700, 0.000345
+  800, 0.000302
+  900, 0.000269
+total time in sec: 260.416270
++ pgcc -fast -acc -Minfo=accel -ta=nvidia,time laplace_openacc_v0_dataregion.c
+main:
+     43, Generating copy(A[:][:])
+         Generating create(Anew[:][:])
+     49, Generating NVIDIA code
+     50, Loop is parallelizable
+     52, Loop is parallelizable
+         Accelerator kernel generated
+         50, #pragma acc loop gang /* blockIdx.y */
+         52, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+         55, Max reduction generated for error
+     60, Generating NVIDIA code
+     61, Loop is parallelizable
+     63, Loop is parallelizable
+         Accelerator kernel generated
+         61, #pragma acc loop gang /* blockIdx.y */
+         63, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
++ ./a.out
+
+Accelerator Kernel Timing data
+/home/fchen14/loniworkshop2014/laplace/openacc/laplace_openacc_v0_dataregion.c
+  main  NVIDIA  devicenum=0
+    time(us): 4,697,810
+    43: data region reached 1 time
+        43: data copyin reached 8 times
+             device time(us): total=22,423 max=2,821 min=2,797 avg=2,802
+        73: data copyout reached 9 times
+             device time(us): total=20,080 max=2,510 min=10 avg=2,231
+    49: compute region reached 1000 times
+        52: kernel launched 1000 times
+            grid: [32x4094]  block: [128]
+             device time(us): total=2,906,790 max=3,121 min=2,900 avg=2,906
+            elapsed time(us): total=2,916,105 max=3,137 min=2,909 avg=2,916
+        52: reduction kernel launched 1000 times
+            grid: [1]  block: [256]
+             device time(us): total=266,330 max=318 min=265 avg=266
+            elapsed time(us): total=276,454 max=328 min=274 avg=276
+    60: compute region reached 1000 times
+        63: kernel launched 1000 times
+            grid: [32x4094]  block: [128]
+             device time(us): total=1,482,187 max=1,533 min=1,477 avg=1,482
+            elapsed time(us): total=1,492,128 max=1,543 min=1,486 avg=1,492
+Jacobi relaxation Calculation: 4096 x 4096 mesh
+    0, 0.250000
+  100, 0.002397
+  200, 0.001204
+  300, 0.000804
+  400, 0.000603
+  500, 0.000483
+  600, 0.000403
+  700, 0.000345
+  800, 0.000302
+  900, 0.000269
+total time in sec: 5.118500
+------------------------------------------------------
+Running PBS epilogue script    - 02-Jun-2014 14:52:01
+------------------------------------------------------
+Checking node shelob024 (MS)
+-> Killing process of fchen14: -bash
+Checking node shelob024 ; modules change (nvidia_uvm 28216 <) ; ok
+------------------------------------------------------
+Concluding PBS epilogue script - 02-Jun-2014 14:52:03
+------------------------------------------------------
+Exit Status:     0
+Job ID:          4187.shelob1
+Username:        fchen14
+Group:           Admins
+Job Name:        acc_laplace_test
+Session Id:      8273
+Resource Limits: ncpus=1,neednodes=1:ppn=16,nodes=1:ppn=16,walltime=01:00:00
+Resources Used:  cput=00:19:29,mem=412908kb,vmem=105518268kb,walltime=00:08:00
+Queue Used:      workq
+Account String:  hpc_hpcadmin1
+Node:            shelob024
+Process id:      10257
+------------------------------------------------------
