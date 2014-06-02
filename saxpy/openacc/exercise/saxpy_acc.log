@@ -1,0 +1,122 @@
+--------------------------------------
+Running PBS prologue script
+--------------------------------------
+User and Job Data:
+--------------------------------------
+Job ID:    4182.shelob1
+Username:  fchen14
+Group:     Admins
+Date:      02-Jun-2014 14:41
+Node:      shelob021 (8439)
+--------------------------------------
+PBS has allocated the following nodes:
+
+shelob021
+
+A total of 16 processors on 1 nodes allocated
+---------------------------------------------
+Check nodes and clean them of stray processes
+---------------------------------------------
+Checking node shelob021 14:41:54 
+Done clearing all the allocated nodes
+------------------------------------------------------
+Concluding PBS prologue script - 02-Jun-2014 14:41:54
+------------------------------------------------------
+pgcc -acc -mp -Minfo=all -ta=nvidia,time saxpy_acc.c -o saxpyacc_c.out
+saxpy_acc:
+     29, Generating create(x[:n])
+         Generating create(y[:n])
+     31, Generating NVIDIA code
+     32, Loop is parallelizable
+         Accelerator kernel generated
+         32, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+     37, Generating NVIDIA code
+     38, Loop is parallelizable
+         Accelerator kernel generated
+         38, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+saxpy_omp:
+     66, Parallel region activated
+         Parallel loop activated with static block schedule
+     68, Barrier
+         Parallel region terminated
+pgf90 -acc -mp -Minfo=all -ta=nvidia,time saxpy_acc.f90 -o saxpyacc_f.out
+saxpy:
+     13, Generating create(x(:))
+         Generating create(y(:))
+         Generating copyin(a)
+     14, Accelerator kernel generated
+         15, !$acc loop vector(256) ! threadidx%x
+     14, Generating NVIDIA code
+     15, Loop is parallelizable
+     17, Accelerator kernel generated
+         18, !$acc loop vector(256) ! threadidx%x
+     17, Generating NVIDIA code
+     18, Loop is parallelizable
+     22, Accelerator kernel generated
+         23, !$acc loop gang, vector(256) ! blockidx%x threadidx%x
+     22, Generating NVIDIA code
+WARNING: Deprecated config file /etc/modprobe.conf, all config files belong into /etc/modprobe.d/.
+
+Accelerator Kernel Timing data
+/home/fchen14/loniworkshop2014/saxpy/openacc/solution/saxpy_acc.c
+  saxpy_acc  NVIDIA  devicenum=0
+    time(us): 60,794
+    29: data region reached 1 time
+    31: compute region reached 1 time
+        32: kernel launched 1 time
+            grid: [65535]  block: [128]
+             device time(us): total=22,874 max=22,874 min=22,874 avg=22,874
+            elapsed time(us): total=22,893 max=22,893 min=22,893 avg=22,893
+    37: compute region reached 1 time
+        38: kernel launched 1 time
+            grid: [65535]  block: [128]
+             device time(us): total=37,920 max=37,920 min=37,920 avg=37,920
+            elapsed time(us): total=37,935 max=37,935 min=37,935 avg=37,935
+SAXPY acc Time: 0.037943
+SAXPY omp Time: 0.190716
+SAXPY serial Time: 0.402694
+
+Accelerator Kernel Timing data
+/home/fchen14/loniworkshop2014/saxpy/openacc/solution/saxpy_acc.f90
+  saxpy  NVIDIA  devicenum=0
+    time(us): 329,996
+    13: data region reached 1 time
+        13: data copyin reached 1 time
+             device time(us): total=6 max=6 min=6 avg=6
+    14: compute region reached 1 time
+        14: kernel launched 1 time
+            grid: [1]  block: [256]
+             device time(us): total=145,451 max=145,451 min=145,451 avg=145,451
+            elapsed time(us): total=145,464 max=145,464 min=145,464 avg=145,464
+    17: compute region reached 1 time
+        17: kernel launched 1 time
+            grid: [1]  block: [256]
+             device time(us): total=145,239 max=145,239 min=145,239 avg=145,239
+            elapsed time(us): total=145,253 max=145,253 min=145,253 avg=145,253
+    22: compute region reached 1 time
+        22: kernel launched 1 time
+            grid: [65535]  block: [256]
+             device time(us): total=39,300 max=39,300 min=39,300 avg=39,300
+            elapsed time(us): total=39,311 max=39,311 min=39,311 avg=39,311
+SAXPY Time:        0.039315in secs
+------------------------------------------------------
+Running PBS epilogue script    - 02-Jun-2014 14:42:05
+------------------------------------------------------
+Checking node shelob021 (MS)
+Checking node shelob021 ; modules change (nvidia_uvm 28216 <) ; ok
+------------------------------------------------------
+Concluding PBS epilogue script - 02-Jun-2014 14:42:07
+------------------------------------------------------
+Exit Status:     0
+Job ID:          4182.shelob1
+Username:        fchen14
+Group:           Admins
+Job Name:        saxpy_openacc
+Session Id:      8438
+Resource Limits: ncpus=1,neednodes=1:ppn=16,nodes=1:ppn=16,walltime=01:00:00
+Resources Used:  cput=00:00:28,mem=0kb,vmem=0kb,walltime=00:00:14
+Queue Used:      workq
+Account String:  hpc_hpcadmin1
+Node:            shelob021
+Process id:      9091
+------------------------------------------------------
