@@ -1,0 +1,16 @@
+#!/bin/bash -x
+#PBS -q workq
+#PBS -A hpc_train_2014
+#PBS -l nodes=1:ppn=16
+#PBS -l walltime=01:00:00
+#PBS -o output_s
+#-e eg
+#PBS -j oe
+#PBS -N mm_acc
+
+cd $PBS_O_WORKDIR
+make all
+export PGI_ACC_TIME=1
+export OMP_NUM_THREADS=16
+./piacc_c.out
+./piacc_f.out

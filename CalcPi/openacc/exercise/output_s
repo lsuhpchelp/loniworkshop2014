@@ -1,0 +1,117 @@
+--------------------------------------
+Running PBS prologue script
+--------------------------------------
+User and Job Data:
+--------------------------------------
+Job ID:    4173.shelob1
+Username:  fchen14
+Group:     Admins
+Date:      02-Jun-2014 14:37
+Node:      shelob019 (7855)
+--------------------------------------
+PBS has allocated the following nodes:
+
+shelob019
+
+A total of 16 processors on 1 nodes allocated
+---------------------------------------------
+Check nodes and clean them of stray processes
+---------------------------------------------
+Checking node shelob019 14:37:54 
+Done clearing all the allocated nodes
+------------------------------------------------------
+Concluding PBS prologue script - 02-Jun-2014 14:37:54
+------------------------------------------------------
++ cd /home/fchen14/loniworkshop2014/CalcPi/openacc/solution
++ make all
+pgcc -acc -mp -Minfo=all -ta=nvidia,time pi_acc.c -o piacc_c.out
+main:
+     15, Generating copyin(step)
+     19, Accelerator kernel generated
+         21, #pragma acc loop gang, vector(256) /* blockIdx.x threadIdx.x */
+         24, Sum reduction generated for sum
+     19, Generating NVIDIA code
+     38, Parallel region activated
+     40, Parallel loop activated with static block schedule
+     44, Barrier
+     46, Begin critical section
+         End critical section
+         Parallel region terminated
+pgf90 -acc -mp -Minfo=all -ta=nvidia,time pi_acc.f90 -o piacc_f.out
+pi_omp:
+     17, Generating copyin(step)
+     20, Accelerator kernel generated
+         21, !$acc loop gang, vector(256) ! blockidx%x threadidx%x
+         23, Sum reduction generated for sum
+     20, Generating NVIDIA code
++ export PGI_ACC_TIME=1
++ PGI_ACC_TIME=1
++ export OMP_NUM_THREADS=16
++ OMP_NUM_THREADS=16
++ ./piacc_c.out
+WARNING: Deprecated config file /etc/modprobe.conf, all config files belong into /etc/modprobe.d/.
+
+Accelerator Kernel Timing data
+/home/fchen14/loniworkshop2014/CalcPi/openacc/solution/pi_acc.c
+  main  NVIDIA  devicenum=0
+    time(us): 58,036
+    15: data region reached 1 time
+        15: data copyin reached 1 time
+             device time(us): total=22 max=22 min=22 avg=22
+    19: compute region reached 1 time
+        19: kernel launched 1 time
+            grid: [65535]  block: [256]
+             device time(us): total=57,914 max=57,914 min=57,914 avg=57,914
+            elapsed time(us): total=57,937 max=57,937 min=57,937 avg=57,937
+        19: reduction kernel launched 1 time
+            grid: [1]  block: [256]
+             device time(us): total=100 max=100 min=100 avg=100
+            elapsed time(us): total=113 max=113 min=113 avg=113
+n=1000000000
+ pi acc = 3.141592653589794
+ total acc time: 0.063864 sec
+ pi omp = 3.141592653589833
+ total omp time with 16 threads: 0.482301 sec
+pi serial = 3.141592653589971
+ total serial time: 14.702832 sec
++ ./piacc_f.out
+
+Accelerator Kernel Timing data
+/home/fchen14/loniworkshop2014/CalcPi/openacc/solution/pi_acc.f90
+  pi_omp  NVIDIA  devicenum=0
+    time(us): 50,926
+    17: data region reached 1 time
+        17: data copyin reached 1 time
+             device time(us): total=7 max=7 min=7 avg=7
+    20: compute region reached 1 time
+        20: kernel launched 1 time
+            grid: [65535]  block: [256]
+             device time(us): total=50,820 max=50,820 min=50,820 avg=50,820
+            elapsed time(us): total=51,024 max=51,024 min=51,024 avg=51,024
+        20: reduction kernel launched 1 time
+            grid: [1]  block: [256]
+             device time(us): total=99 max=99 min=99 avg=99
+            elapsed time(us): total=110 max=110 min=110 avg=110
+pi = 3.141592655589793
+time to compute =    0.052 seconds
+------------------------------------------------------
+Running PBS epilogue script    - 02-Jun-2014 14:38:17
+------------------------------------------------------
+Checking node shelob019 (MS)
+Checking node shelob019 ; modules change (nvidia_uvm 28216 <) ; ok
+------------------------------------------------------
+Concluding PBS epilogue script - 02-Jun-2014 14:38:20
+------------------------------------------------------
+Exit Status:     0
+Job ID:          4173.shelob1
+Username:        fchen14
+Group:           Admins
+Job Name:        mm_acc
+Session Id:      7854
+Resource Limits: ncpus=1,neednodes=1:ppn=16,nodes=1:ppn=16,walltime=01:00:00
+Resources Used:  cput=00:04:08,mem=20696kb,vmem=351016kb,walltime=00:00:26
+Queue Used:      workq
+Account String:  hpc_train_2014
+Node:            shelob019
+Process id:      8507
+------------------------------------------------------
