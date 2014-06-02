@@ -5,15 +5,26 @@
 #PBS -o og
 #-e eg
 #PBS -j oe
-#PBS -N acc_test
+#PBS -N acc_laplace_test
 
 cd $PBS_O_WORKDIR
-export OMP_NUM_THREADS=16
 export PGI_ACC_TIME=1
-#./lapacc.out 4096 4096 1000 100 0.001
-#./laps.out 200 200 100 1 0.001
-#./cudas.out
-#./mmacc.out 4096 4096 4096 1 0.001
-./piacc.out
+# start the benchmark
+pgcc -fast laplace_openacc_v0.c
 ./a.out
-#./bm_laplace.sh
+pgcc -fast -mp laplace_openacc_v0.c
+export OMP_NUM_THREADS=1
+./a.out
+export OMP_NUM_THREADS=2
+./a.out
+export OMP_NUM_THREADS=4
+./a.out
+export OMP_NUM_THREADS=8
+./a.out
+export OMP_NUM_THREADS=16
+./a.out
+export PGI_ACC_TIME=1
+pgcc -fast -acc -Minfo=accel -ta=nvidia,time laplace_openacc_v0.c
+./a.out
+pgcc -fast -acc -Minfo=accel -ta=nvidia,time laplace_openacc_v0_dataregion.c
+./a.out
