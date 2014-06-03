@@ -3,26 +3,26 @@ Running PBS prologue script
 --------------------------------------
 User and Job Data:
 --------------------------------------
-Job ID:    4187.shelob1
+Job ID:    4280.shelob1
 Username:  fchen14
 Group:     Admins
-Date:      02-Jun-2014 14:44
-Node:      shelob024 (8274)
+Date:      03-Jun-2014 11:42
+Node:      shelob019 (12779)
 --------------------------------------
 PBS has allocated the following nodes:
 
-shelob024
+shelob019
 
 A total of 16 processors on 1 nodes allocated
 ---------------------------------------------
 Check nodes and clean them of stray processes
 ---------------------------------------------
-Checking node shelob024 14:44:03 
+Checking node shelob019 11:42:13 
 Done clearing all the allocated nodes
 ------------------------------------------------------
-Concluding PBS prologue script - 02-Jun-2014 14:44:03
+Concluding PBS prologue script - 03-Jun-2014 11:42:13
 ------------------------------------------------------
-+ cd /home/fchen14/loniworkshop2014/laplace/openacc
++ cd /home/fchen14/loniworkshop2014/laplace/openacc/solution
 + export PGI_ACC_TIME=1
 + PGI_ACC_TIME=1
 + pgcc -fast laplace_openacc_v0.c
@@ -38,7 +38,7 @@ Jacobi relaxation Calculation: 4096 x 4096 mesh
   700, 0.000345
   800, 0.000302
   900, 0.000269
-total time in sec: 43.592252
+total time in sec: 44.026204
 + pgcc -fast -mp laplace_openacc_v0.c
 + export OMP_NUM_THREADS=1
 + OMP_NUM_THREADS=1
@@ -54,7 +54,7 @@ Jacobi relaxation Calculation: 4096 x 4096 mesh
   700, 0.000345
   800, 0.000302
   900, 0.000269
-total time in sec: 49.097369
+total time in sec: 49.376195
 + export OMP_NUM_THREADS=2
 + OMP_NUM_THREADS=2
 + ./a.out
@@ -69,7 +69,7 @@ Jacobi relaxation Calculation: 4096 x 4096 mesh
   700, 0.000345
   800, 0.000302
   900, 0.000269
-total time in sec: 32.554336
+total time in sec: 32.050811
 + export OMP_NUM_THREADS=4
 + OMP_NUM_THREADS=4
 + ./a.out
@@ -84,7 +84,7 @@ Jacobi relaxation Calculation: 4096 x 4096 mesh
   700, 0.000345
   800, 0.000302
   900, 0.000269
-total time in sec: 24.855987
+total time in sec: 24.797150
 + export OMP_NUM_THREADS=8
 + OMP_NUM_THREADS=8
 + ./a.out
@@ -99,7 +99,7 @@ Jacobi relaxation Calculation: 4096 x 4096 mesh
   700, 0.000345
   800, 0.000302
   900, 0.000269
-total time in sec: 26.302223
+total time in sec: 26.296772
 + export OMP_NUM_THREADS=16
 + OMP_NUM_THREADS=16
 + ./a.out
@@ -114,7 +114,7 @@ Jacobi relaxation Calculation: 4096 x 4096 mesh
   700, 0.000345
   800, 0.000302
   900, 0.000269
-total time in sec: 26.986655
+total time in sec: 27.097894
 + export PGI_ACC_TIME=1
 + PGI_ACC_TIME=1
 + pgcc -fast -acc -Minfo=accel -ta=nvidia,time laplace_openacc_v0.c
@@ -137,36 +137,35 @@ main:
          60, #pragma acc loop gang /* blockIdx.y */
          62, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
 + ./a.out
-WARNING: Deprecated config file /etc/modprobe.conf, all config files belong into /etc/modprobe.d/.
 
 Accelerator Kernel Timing data
-/home/fchen14/loniworkshop2014/laplace/openacc/laplace_openacc_v0.c
+/home/fchen14/loniworkshop2014/laplace/openacc/solution/laplace_openacc_v0.c
   main  NVIDIA  devicenum=0
-    time(us): 95,153,357
+    time(us): 91,373,433
     48: data region reached 1000 times
         48: data copyin reached 8000 times
-             device time(us): total=22,294,420 max=2,894 min=2,742 avg=2,786
+             device time(us): total=22,411,091 max=2,875 min=2,764 avg=2,801
         59: data copyout reached 8000 times
-             device time(us): total=22,793,220 max=45,748 min=2,503 avg=2,849
+             device time(us): total=21,158,976 max=33,509 min=2,510 avg=2,644
     48: compute region reached 1000 times
         51: kernel launched 1000 times
             grid: [32x4094]  block: [128]
-             device time(us): total=2,923,988 max=3,142 min=2,918 avg=2,923
-            elapsed time(us): total=2,935,637 max=3,161 min=2,930 avg=2,935
+             device time(us): total=2,920,913 max=3,076 min=2,907 avg=2,920
+            elapsed time(us): total=2,932,227 max=3,143 min=2,919 avg=2,932
         51: reduction kernel launched 1000 times
             grid: [1]  block: [256]
-             device time(us): total=268,277 max=355 min=266 avg=268
-            elapsed time(us): total=279,353 max=365 min=276 avg=279
+             device time(us): total=267,530 max=333 min=265 avg=267
+            elapsed time(us): total=278,403 max=345 min=275 avg=278
     59: data region reached 1000 times
         59: data copyin reached 8000 times
-             device time(us): total=21,965,506 max=2,823 min=2,733 avg=2,745
+             device time(us): total=22,054,900 max=2,840 min=2,735 avg=2,756
         67: data copyout reached 8000 times
-             device time(us): total=23,406,504 max=45,871 min=2,503 avg=2,925
+             device time(us): total=21,061,539 max=28,097 min=2,509 avg=2,632
     59: compute region reached 1000 times
         62: kernel launched 1000 times
             grid: [32x4094]  block: [128]
-             device time(us): total=1,501,442 max=1,582 min=1,495 avg=1,501
-            elapsed time(us): total=1,513,829 max=1,594 min=1,506 avg=1,513
+             device time(us): total=1,498,484 max=1,570 min=1,493 avg=1,498
+            elapsed time(us): total=1,509,844 max=1,582 min=1,503 avg=1,509
 Jacobi relaxation Calculation: 4096 x 4096 mesh
     0, 0.250000
   100, 0.002397
@@ -178,7 +177,7 @@ Jacobi relaxation Calculation: 4096 x 4096 mesh
   700, 0.000345
   800, 0.000302
   900, 0.000269
-total time in sec: 260.416270
+total time in sec: 189.092788
 + pgcc -fast -acc -Minfo=accel -ta=nvidia,time laplace_openacc_v0_dataregion.c
 main:
      43, Generating copy(A[:][:])
@@ -199,28 +198,28 @@ main:
 + ./a.out
 
 Accelerator Kernel Timing data
-/home/fchen14/loniworkshop2014/laplace/openacc/laplace_openacc_v0_dataregion.c
+/home/fchen14/loniworkshop2014/laplace/openacc/solution/laplace_openacc_v0_dataregion.c
   main  NVIDIA  devicenum=0
-    time(us): 4,697,810
+    time(us): 4,698,899
     43: data region reached 1 time
         43: data copyin reached 8 times
-             device time(us): total=22,423 max=2,821 min=2,797 avg=2,802
+             device time(us): total=22,311 max=2,799 min=2,780 avg=2,788
         73: data copyout reached 9 times
-             device time(us): total=20,080 max=2,510 min=10 avg=2,231
+             device time(us): total=20,202 max=2,532 min=10 avg=2,244
     49: compute region reached 1000 times
         52: kernel launched 1000 times
             grid: [32x4094]  block: [128]
-             device time(us): total=2,906,790 max=3,121 min=2,900 avg=2,906
-            elapsed time(us): total=2,916,105 max=3,137 min=2,909 avg=2,916
+             device time(us): total=2,907,199 max=3,114 min=2,899 avg=2,907
+            elapsed time(us): total=2,917,649 max=3,374 min=2,910 avg=2,917
         52: reduction kernel launched 1000 times
             grid: [1]  block: [256]
-             device time(us): total=266,330 max=318 min=265 avg=266
-            elapsed time(us): total=276,454 max=328 min=274 avg=276
+             device time(us): total=266,619 max=320 min=264 avg=266
+            elapsed time(us): total=277,380 max=330 min=274 avg=277
     60: compute region reached 1000 times
         63: kernel launched 1000 times
             grid: [32x4094]  block: [128]
-             device time(us): total=1,482,187 max=1,533 min=1,477 avg=1,482
-            elapsed time(us): total=1,492,128 max=1,543 min=1,486 avg=1,492
+             device time(us): total=1,482,568 max=1,532 min=1,478 avg=1,482
+            elapsed time(us): total=1,493,321 max=1,544 min=1,488 avg=1,493
 Jacobi relaxation Calculation: 4096 x 4096 mesh
     0, 0.250000
   100, 0.002397
@@ -232,26 +231,80 @@ Jacobi relaxation Calculation: 4096 x 4096 mesh
   700, 0.000345
   800, 0.000302
   900, 0.000269
-total time in sec: 5.118500
+total time in sec: 5.139596
++ pgcc -fast -acc -Minfo=accel -ta=nvidia,time laplace_openacc_v1.c
+main:
+     63, Generating copy(told[:nr2][:nc2])
+         Generating create(t[:nr2][:nc2])
+     66, Accelerator kernel generated
+         67, #pragma acc loop gang /* blockIdx.x */
+         68, #pragma acc loop vector(256) /* threadIdx.x */
+     66, Generating NVIDIA code
+     68, Loop is parallelizable
+     73, Accelerator kernel generated
+         74, #pragma acc loop gang /* blockIdx.x */
+         75, #pragma acc loop vector(256) /* threadIdx.x */
+         76, Max reduction generated for dt
+     73, Generating NVIDIA code
+     75, Loop is parallelizable
++ ./a.out 4096 4096 1000 100 1.0e-6
+
+Accelerator Kernel Timing data
+/home/fchen14/loniworkshop2014/laplace/openacc/solution/laplace_openacc_v1.c
+  main  NVIDIA  devicenum=0
+    time(us): 5,620,027
+    63: data region reached 1 time
+        30: data copyin reached 9 times
+             device time(us): total=22,335 max=2,795 min=45 avg=2,481
+        30: kernel launched 2 times
+            grid: [33]  block: [128]
+             device time(us): total=260 max=229 min=31 avg=130
+            elapsed time(us): total=312 max=264 min=48 avg=156
+        92: data copyout reached 9 times
+             device time(us): total=20,216 max=2,527 min=33 avg=2,246
+    66: compute region reached 1000 times
+        66: kernel launched 1000 times
+            grid: [4096]  block: [256]
+             device time(us): total=2,548,467 max=2,604 min=2,536 avg=2,548
+            elapsed time(us): total=2,559,185 max=2,615 min=2,547 avg=2,559
+    73: compute region reached 1000 times
+        73: kernel launched 1000 times
+            grid: [4096]  block: [256]
+             device time(us): total=3,008,853 max=3,029 min=2,987 avg=3,008
+            elapsed time(us): total=3,019,017 max=3,039 min=2,997 avg=3,019
+        73: reduction kernel launched 1000 times
+            grid: [1]  block: [256]
+             device time(us): total=19,896 max=73 min=18 avg=19
+            elapsed time(us): total=30,614 max=83 min=28 avg=30
+Iteration: 100; Convergence Error: 0.358559
+Iteration: 200; Convergence Error: 0.179419
+Iteration: 300; Convergence Error: 0.119503
+Iteration: 400; Convergence Error: 0.089531
+Iteration: 500; Convergence Error: 0.071574
+Iteration: 600; Convergence Error: 0.059623
+Iteration: 700; Convergence Error: 0.051090
+Iteration: 800; Convergence Error: 0.044670
+Iteration: 900; Convergence Error: 0.039696
+Iteration: 1000; Convergence Error: 0.035705
+total time in sec: 6.135861
 ------------------------------------------------------
-Running PBS epilogue script    - 02-Jun-2014 14:52:01
+Running PBS epilogue script    - 03-Jun-2014 11:49:07
 ------------------------------------------------------
-Checking node shelob024 (MS)
--> Killing process of fchen14: -bash
-Checking node shelob024 ; modules change (nvidia_uvm 28216 <) ; ok
+Checking node shelob019 (MS)
+Checking node shelob019 ok
 ------------------------------------------------------
-Concluding PBS epilogue script - 02-Jun-2014 14:52:03
+Concluding PBS epilogue script - 03-Jun-2014 11:49:10
 ------------------------------------------------------
 Exit Status:     0
-Job ID:          4187.shelob1
+Job ID:          4280.shelob1
 Username:        fchen14
 Group:           Admins
 Job Name:        acc_laplace_test
-Session Id:      8273
+Session Id:      12778
 Resource Limits: ncpus=1,neednodes=1:ppn=16,nodes=1:ppn=16,walltime=01:00:00
-Resources Used:  cput=00:19:29,mem=412908kb,vmem=105518268kb,walltime=00:08:00
+Resources Used:  cput=00:18:27,mem=412908kb,vmem=105518268kb,walltime=00:06:56
 Queue Used:      workq
 Account String:  hpc_hpcadmin1
-Node:            shelob024
-Process id:      10257
+Node:            shelob019
+Process id:      14097
 ------------------------------------------------------

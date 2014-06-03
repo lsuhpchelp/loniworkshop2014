@@ -28,3 +28,5 @@ pgcc -fast -acc -Minfo=accel -ta=nvidia,time laplace_openacc_v0.c
 ./a.out
 pgcc -fast -acc -Minfo=accel -ta=nvidia,time laplace_openacc_v0_dataregion.c
 ./a.out
+pgcc -fast -acc -Minfo=accel -ta=nvidia,time laplace_openacc_v1.c
+./a.out 4096 4096 1000 100 1.0e-6
