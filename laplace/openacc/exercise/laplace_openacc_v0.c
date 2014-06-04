@@ -40,11 +40,12 @@ int main(int argc, char** argv)
     int iter = 0;
 
     start_time = omp_get_wtime();
-//FIXME: add the directive for data region
+
     while ( error > tol && iter < iter_max )
     {
         error = 0.0;
-//FIXME: add the directive for loops
+#pragma omp parallel for shared(m, n, Anew, A)
+#pragma acc kernels
         for( int j = 1; j < n-1; j++) {
             for( int i = 1; i < m-1; i++ ) {
                 Anew[j][i] = 0.25 * ( A[j][i+1] + A[j][i-1]
@@ -53,7 +54,8 @@ int main(int argc, char** argv)
             }
         }
 
-//FIXME: add the directive for loops
+#pragma omp parallel for shared(m, n, Anew, A)
+#pragma acc kernels
         for( int j = 1; j < n-1; j++) {
             for( int i = 1; i < m-1; i++ ) {
                 A[j][i] = Anew[j][i];    
