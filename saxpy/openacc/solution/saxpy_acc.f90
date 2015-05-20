@@ -10,7 +10,7 @@ program saxpy
   n=500000000
   allocate(x(n),y(n))
   a = 2.0
-  !$acc data create(x,y) copyin(a)
+  !$acc data create(x), copyout(y)
   !$acc parallel
   x(:) = 1.0
   !$acc end parallel
@@ -28,7 +28,7 @@ program saxpy
   !$acc end data
   
   print '(a,f15.6,a)', 'SAXPY Time: ', end_time - start_time, 'in secs'
-  print '(a,f15.6)', 'y(0) ', y(0)
+  print '(a,f15.6)', 'y(1) ', y(1)
 
   deallocate(x,y)
   

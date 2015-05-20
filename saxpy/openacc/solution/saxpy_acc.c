@@ -30,10 +30,8 @@ void saxpy_acc(long n, float a, float *x, float *restrict y, float xval, float y
     {
 #pragma acc kernels
         for (int i = 0; i < n; ++i) {
-            //x[i] = xval;
-            //y[i] = yval;
-            x[i] = 2.0f;
-            y[i] = 1.0f;
+            x[i] = xval;
+            y[i] = yval;
         }
         start_time = omp_get_wtime();
 #pragma acc kernels //loop
