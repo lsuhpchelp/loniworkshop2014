@@ -5,6 +5,7 @@
 #include <math.h>
 #include <string.h>
 #include <omp.h>
+#include <openacc.h>
 
 #define NN 4096
 #define NM 4096
@@ -38,13 +39,14 @@ int main(int argc, char** argv)
     printf("Jacobi relaxation Calculation: %d x %d mesh\n", n, m);
 
     int iter = 0;
+    int dev_num;
+    acc_set_device_num(1,acc_device_nvidia);
 
     start_time = omp_get_wtime();
-
+#pragma acc data copy(A) create(Anew)
     while ( error > tol && iter < iter_max )
     {
         error = 0.0;
-#pragma omp parallel for shared(m, n, Anew, A)
 #pragma acc kernels
         for( int j = 1; j < n-1; j++) {
             for( int i = 1; i < m-1; i++ ) {
@@ -54,7 +56,6 @@ int main(int argc, char** argv)
             }
         }
 
-#pragma omp parallel for shared(m, n, Anew, A)
 #pragma acc kernels
         for( int j = 1; j < n-1; j++) {
             for( int i = 1; i < m-1; i++ ) {
@@ -65,7 +66,8 @@ int main(int argc, char** argv)
         if(iter % 100 == 0) printf("%5d, %0.6f\n", iter, error);
 
         iter++;
+        dev_num=acc_get_device_num(acc_device_nvidia);
     }
     end_time = omp_get_wtime();
-    printf ("total time in sec: %f\n", end_time - start_time);
+    printf ("total time in sec: %f using device: %d\n", end_time - start_time, dev_num);
 }

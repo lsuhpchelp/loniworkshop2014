@@ -40,6 +40,7 @@ int main(int argc, char** argv)
     int iter = 0;
 
     start_time = omp_get_wtime();
+#pragma acc data copy(A), create(Anew)
     while ( error > tol && iter < iter_max )
     {
         error = 0.0;

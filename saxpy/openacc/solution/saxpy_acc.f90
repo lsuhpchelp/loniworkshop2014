@@ -26,9 +26,11 @@ program saxpy
   !$acc end parallel loop
   end_time = omp_get_wtime()
   !$acc end data
-  deallocate(x,y)
   
   print '(a,f15.6,a)', 'SAXPY Time: ', end_time - start_time, 'in secs'
+  print '(a,f15.6)', 'y(0) ', y(0)
+
+  deallocate(x,y)
   
 end program saxpy
     

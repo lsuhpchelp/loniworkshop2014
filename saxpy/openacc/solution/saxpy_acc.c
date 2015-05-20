@@ -26,20 +26,24 @@ int main(int argc, char **argv) {
 
 void saxpy_acc(long n, float a, float *x, float *restrict y, float xval, float yval) {
     double start_time, end_time;
-#pragma acc data create(x[0:n],y[0:n])
+#pragma acc data create(x[0:n]), copyout(y[0:n])
     {
-#pragma acc kernels loop
+#pragma acc kernels
         for (int i = 0; i < n; ++i) {
-            x[i] = xval;
-            y[i] = yval;
+            //x[i] = xval;
+            //y[i] = yval;
+            x[i] = 2.0f;
+            y[i] = 1.0f;
         }
         start_time = omp_get_wtime();
-#pragma acc kernels loop
+#pragma acc kernels //loop
         for (int i = 0; i < n; ++i)
             y[i] = a * x[i] + y[i];
         end_time = omp_get_wtime();
         printf ("SAXPY acc Time: %f\n", end_time - start_time);
     }
+    printf("y[0]_acc=%f\n",y[0]);
+    printf("a=%lf\n",a);
 }
 
 void saxpy_serial(long n, float a, float *x, float *restrict y, float xval, float yval) {
@@ -53,6 +57,7 @@ void saxpy_serial(long n, float a, float *x, float *restrict y, float xval, floa
         y[i] = a * x[i] + y[i];
     end_time = omp_get_wtime();
     printf ("SAXPY serial Time: %f\n", end_time - start_time);
+    printf("y[0]_serial=%lf\n",y[0]);
 }
 
 void saxpy_omp(long n, float a, float *x, float *restrict y, float xval, float yval) {
@@ -67,4 +72,5 @@ void saxpy_omp(long n, float a, float *x, float *restrict y, float xval, float y
         y[i] = a * x[i] + y[i];
     end_time = omp_get_wtime();
     printf ("SAXPY omp Time: %f\n", end_time - start_time);
+    printf("y[0]_omp=%lf\n",y[0]);
 }
