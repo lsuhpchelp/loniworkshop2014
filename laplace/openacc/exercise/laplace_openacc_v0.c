@@ -43,7 +43,7 @@ int main(int argc, char** argv)
     acc_set_device_num(1,acc_device_nvidia);
 
     start_time = omp_get_wtime();
-#pragma acc data copy(A) create(Anew)
+//#pragma acc data copy(A), create(Anew)
     while ( error > tol && iter < iter_max )
     {
         error = 0.0;

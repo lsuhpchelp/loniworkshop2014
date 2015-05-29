@@ -31,10 +31,11 @@ int main() {
     printf(" total acc time: %g sec\n", run_time);
 
     // omp run
-    int omp_threads=omp_get_num_procs();
+    int omp_threads;
+    //int omp_threads=omp_get_num_procs();
     sum = 0.0;
     start_time = omp_get_wtime();
-#pragma omp parallel private(i,x) reduction(+:sum) num_threads(omp_threads)
+#pragma omp parallel private(i,x) reduction(+:sum) //num_threads(omp_threads)
     {
 #pragma omp for
         for (i = 0; i < n; i++) {

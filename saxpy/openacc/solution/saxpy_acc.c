@@ -41,7 +41,6 @@ void saxpy_acc(long n, float a, float *x, float *restrict y, float xval, float y
         printf ("SAXPY acc Time: %f\n", end_time - start_time);
     }
     printf("y[0]_acc=%f\n",y[0]);
-    printf("a=%lf\n",a);
 }
 
 void saxpy_serial(long n, float a, float *x, float *restrict y, float xval, float yval) {

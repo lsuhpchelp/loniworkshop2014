@@ -19,6 +19,7 @@ int main(int argc, char **argv)
         y[i] = 1.0f;
     }
     saxpy(n, 3.0f, x, y);
+    printf("y[0]=%5.7f\n",y[0]);
     free(x);
     free(y);
     return 0;
