@@ -64,18 +64,6 @@ int main(int argc, char** argv) {
     // check if the acc version matches the serial version
     if (check) {
         start_time = omp_get_wtime();
-//        #pragma omp parallel shared(a,b,cs), private(i,j,k) 
-//        #pragma omp parallel for
-//        for (i = 0; i < nra; i++){
-//            for (k = 0; k < ncb; k++){
-//                sum = 0.0;
-//                for (j = 0; j < nca; j++){
-//                    sum += a[i][j] * b[j][k];
-//                }
-//                cs[i][k] = sum;
-//            }
-//        }
-
         int    omp_threads;
 #pragma omp parallel shared(a,b,cs) private(i,j,k) 
         {

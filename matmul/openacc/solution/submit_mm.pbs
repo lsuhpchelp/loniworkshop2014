@@ -8,7 +8,7 @@
 #PBS -j oe
 #PBS -N mm_acc
 
-#cd $PBS_O_WORKDIR
+cd $PBS_O_WORKDIR
 make all
 export PGI_ACC_TIME=1
 export OMP_NUM_THREADS=16
