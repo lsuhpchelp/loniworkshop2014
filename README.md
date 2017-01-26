@@ -20,4 +20,3 @@ LONI workshop 2014 source code
 * Saxpy (y=a*x+b)
 * Hello (Simple hello world program)
 * Miscel (Miscelleneous exercises)
-test
