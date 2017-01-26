@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <omp.h>
 
-void saxpy(int n, float a, float *x, float *restrict y) {
+void saxpy(int n, float a, float *x, float *y) {
+//void saxpy(int n, float a, float *x, float *restrict y) {
 #pragma acc kernels
     for (int i = 0; i < n; ++i)
         y[i] = a*x[i] + y[i];

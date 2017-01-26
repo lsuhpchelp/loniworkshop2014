@@ -17,7 +17,7 @@ int main() {
         start_time = omp_get_wtime();
 //FIXME: complete the OpenACC directive here:
 #pragma acc parallel loop reduction(+:sum)
-//#pragma acc kernels
+//#pragma acc kernels 
         for (i = 0; i < n; i++) {
         // FIXME complete the iteration loop here f(x) = 4.0/(1+x*x)
             x = (i+0.5)*step;
