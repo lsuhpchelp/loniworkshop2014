@@ -1,7 +1,7 @@
 loniworkshop2014
 ================
 
-LONI workshop 2014 source code
+LONI workshop 2015 source code
 
 ##Programming Techniques
 * MPI
@@ -20,3 +20,5 @@ LONI workshop 2014 source code
 * Saxpy (y=a*x+b)
 * Hello (Simple hello world program)
 * Miscel (Miscelleneous exercises)
+
+
